@@ -107,6 +107,26 @@
   .mats{display:grid; grid-template-columns:1fr 1fr; gap:10px 22px;}
   .lines .f{margin-top:8px;}
 
+  /* кнопки-чипи: зв'язок і де файли */
+  .chips{display:flex; flex-wrap:wrap; align-items:center; gap:9px; margin-top:18px;}
+  .chip{position:relative; display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border:1px solid #D4D8DF; border-radius:6px;
+    background:#fff; cursor:pointer; font-size:13.5px; color:var(--ink); transition:.14s ease; user-select:none; white-space:nowrap;}
+  .chip:hover{border-color:#787D87;}
+  .chip input{position:absolute; opacity:0; inset:0; margin:0; cursor:pointer;}
+  .chip .dot{width:9px; height:9px; border-radius:50%; border:1px solid #D4D8DF; flex:none; transition:.14s ease;}
+  .chip:has(input:checked){background:var(--head); border-color:var(--head); color:#fff;}
+  .chip:has(input:checked) .dot{background:var(--blue); border-color:var(--blue);}
+  .chip:has(input:focus-visible){box-shadow:0 0 0 3px #EBF0F7;}
+  .chip .ic{width:17px; height:17px; margin:0 4px 0 1px; flex:none;}
+  .cc-mark{font-weight:700; letter-spacing:-.02em;} .cc-mark b{color:#2A2D33;} .cc-mark i{color:#57B278; font-style:normal;}
+  .chip:has(input:checked) .cc-mark b{color:#fff;} .chip:has(input:checked) .cc-mark i{color:#8FD3A6;}
+  .gm-mark{font-weight:700; color:#2A2D33;} .tg-mark{font-weight:700; color:#2AABEE;}
+  .chip:has(input:checked) .gm-mark{color:#fff;} .chip:has(input:checked) .tg-mark{color:#8FD0F0;}
+  .filelink{flex:1 1 220px; min-width:0; font:inherit; font-size:13.5px; color:var(--ink); background:transparent; border:0;
+    border-bottom:1px solid var(--rule); border-radius:0; padding:8px 4px;}
+  .filelink:focus{outline:none; border-bottom:2px solid var(--blue); padding-bottom:7px;}
+  .filelink[disabled]{opacity:.4;}
+
   /* зубна формула — векторна з бланка */
   .chart{margin:22px -36px 0; background:var(--band); padding:14px 24px 10px; position:relative;}
   .chart svg{display:block; width:100%; height:auto;}
@@ -256,6 +276,15 @@
         <label class="f"><input type="text" id="matLab1" aria-label="Матеріали Stelmakh Lab, рядок 1"></label>
         <label class="f"><input type="text" id="matLab2" aria-label="Матеріали Stelmakh Lab, рядок 2"></label>
       </div>
+    </div>
+
+    <div class="chips" id="chips">
+      <label class="chip"><input type="checkbox" id="callFirst"><span class="dot"></span>Зв'язатися з лікарем до початку моделювання</label>
+      <label class="chip"><input type="checkbox" id="filesCC"><span class="dot"></span>Файли в <span class="cc-mark"><b>clinic</b><i>cards</i></span></label>
+      <label class="chip"><input type="checkbox" id="filesGM"><span class="dot"></span>Файли на <svg class="ic" viewBox="0 0 48 36" aria-hidden="true"><path fill="#4285F4" d="M4 33h7V17L2 10v20a3 3 0 0 0 3 3z"/><path fill="#34A853" d="M37 33h7a3 3 0 0 0 3-3V10l-9 7v16z"/><path fill="#FBBC04" d="M37 6v11l10-7.5V5.5A3.5 3.5 0 0 0 41.4 2.7L37 6z"/><path fill="#EA4335" d="M11 17V6l13 9.7L37 6v11L24 26.8 11 17z"/><path fill="#C5221F" d="M1 5.5V9.5L11 17V6L6.6 2.7A3.5 3.5 0 0 0 1 5.5z"/></svg><span class="gm-mark">Gmail</span></label>
+      <label class="chip"><input type="checkbox" id="filesTG"><span class="dot"></span>Файли в <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path fill="#fff" d="M5.6 11.7 17 7.3c.6-.2 1.1.1.9 1l-1.9 9.1c-.1.6-.5.8-1 .5l-2.9-2.1-1.4 1.3c-.2.2-.4.3-.7.3l.3-3 5.4-4.9c.2-.2 0-.3-.3-.1l-6.7 4.2-2.9-.9c-.6-.2-.6-.6.1-.9z"/></svg><span class="tg-mark">Telegram</span></label>
+      <label class="chip"><input type="checkbox" id="filesLK"><span class="dot"></span>Файли у файлообміннику</label>
+      <input type="url" id="fileLink" class="filelink" placeholder="посилання на файли" aria-label="Посилання на файли">
     </div>
 
     <div class="chart" id="chart">
@@ -408,11 +437,14 @@
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
   var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
-    "matTray","matAbut","matBow","matAnal","matTrans","matOther","matLab1","matLab2","shade","implant","stump","notes"];
+    "matTray","matAbut","matBow","matAnal","matTrans","matOther","matLab1","matLab2","shade","implant","stump","notes","fileLink"];
+  var CHIP_IDS=["callFirst","filesCC","filesGM","filesTG","filesLK"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
+    o.chips=CHIP_IDS.filter(function(id){ return $("#"+id).checked; });
     o.teeth=teethSel(); o.works=$$(".wk").map(function(w){ var cb=$("input[type=checkbox]",w), tx=$("input[type=text]",w);
       return (cb.checked||tx.value.trim())?{n:cb.dataset.work,c:cb.checked?1:0,note:tx.value.trim()}:null; }).filter(Boolean); return o; }
   function applyAll(o){ if(!o) return; FIELD_IDS.forEach(function(id){ if(o[id]!==undefined) setv(id,o[id]); });
+    CHIP_IDS.forEach(function(id){ $("#"+id).checked=(o.chips||[]).indexOf(id)>=0; }); $("#fileLink").disabled=!$("#filesLK").checked;
     var ts={}; (o.teeth||[]).forEach(function(t){ ts[t]=1; });
     teeth.forEach(function(t){ var on=!!ts[t.dataset.n]; t.classList.toggle("on",on); t.setAttribute("aria-checked",on?"true":"false"); }); paintSel();
     var by={}; (o.works||[]).forEach(function(w){ by[w.n]=w; });
@@ -451,6 +483,14 @@
     t.addEventListener("keydown",function(e){ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tog(); } });
   });
 
+  // файлообмінник: посилання активне лише з увімкненим чипом
+  $("#filesLK").addEventListener("change",function(){ $("#fileLink").disabled=!this.checked; if(!this.checked) $("#fileLink").value=""; });
+  $("#fileLink").disabled=true;
+  function chipsText(){
+    var f=[]; if($("#filesCC").checked) f.push("ClinicCards"); if($("#filesGM").checked) f.push("Gmail");
+    if($("#filesTG").checked) f.push("Telegram"); if($("#filesLK").checked) f.push("файлообмінник"+(v("fileLink")?(" — "+v("fileLink")):""));
+    return f;
+  }
   // роботи: галочка = обрана робота; текст поруч — примітка (зуби, кількість).
   // Введений текст сам ставить галочку.
   $$(".wk").forEach(function(w){
@@ -483,6 +523,8 @@
       "Пацієнт: "+(v("patient")||"—")+(v("age")?(", "+v("age")+" р."):""),
       "Замовлено: "+(v("odate")||"—")+(v("otime")?(" "+v("otime")):""),
       "Дата доставки: "+(v("due")||"—")+(v("dtime")?(" "+v("dtime")):"")];
+    if($("#callFirst").checked) L.push("⚠ Зв'язатися з лікарем до початку моделювання");
+    var fs=chipsText(); if(fs.length) L.push("Файли: "+fs.join(", "));
     var ts=teethSel(); if(ts.length) L.push("Зуби: "+ts.join(", "));
     if(v("shade")) L.push("Колір реставрації: "+v("shade"));
     if(v("implant")) L.push("Імплант система: "+v("implant"));
@@ -527,6 +569,10 @@
     var filled=function(el){ var i=$("input,textarea",el); return !!(i&&String(i.value||"").trim()); };
     // поля з підкресленням (крім шапки)
     $$(".body .f",root).forEach(function(f){ if(!filled(f)) f.remove(); });
+    // чипи: лишаються тільки увімкнені
+    $$(".chip",root).forEach(function(c){ if(!$("input",c).checked) c.remove(); });
+    var fl=$(".filelink",root); if(fl&&(!fl.value.trim()||fl.disabled)) fl.remove();
+    var ch=$(".chips",root); if(ch&&!ch.children.length) ch.remove();
     // роботи
     $$(".wk",root).forEach(function(w){ if(!$("input[type=checkbox]",w).checked) w.remove();
       else { var t=$("input[type=text]",w); if(!t.value.trim()) t.remove(); } });
@@ -584,7 +630,7 @@
     $$("input,textarea",$("#sheet")).forEach(function(e){ if(e.type==="checkbox") e.checked=false; else e.value=""; });
     $$(".wk.on").forEach(function(w){ w.classList.remove("on"); });
     teeth.forEach(function(t){ t.classList.remove("on"); t.setAttribute("aria-checked","false"); });
-    paintSel(); fresh(); loadClinic(); $("#toast").className="toast"; window.scrollTo({top:0,behavior:"smooth"});
+    paintSel(); $("#fileLink").disabled=true; fresh(); loadClinic(); $("#toast").className="toast"; window.scrollTo({top:0,behavior:"smooth"});
   });
 
   // масштаб аркуша під ширину вікна
