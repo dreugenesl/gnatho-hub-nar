@@ -117,6 +117,7 @@
   .cols{display:grid; grid-template-columns:1fr 1fr; gap:0 34px;}
   .mats{display:grid; grid-template-columns:1fr 1fr; gap:10px 22px;}
   .lines .f{margin-top:8px;}
+  .notes.lab{margin-top:10px;} .notes.lab textarea{height:140px;}
 
   /* кнопки-чипи: зв'язок і де файли */
   .chips{display:flex; flex-wrap:wrap; align-items:center; gap:9px; margin-top:18px;}
@@ -297,8 +298,7 @@
       </div>
       <div class="lines">
         <h2>Матеріали Stelmakh Lab, які необхідно повернути</h2>
-        <label class="f"><input type="text" id="matLab1" aria-label="Матеріали Stelmakh Lab, рядок 1"></label>
-        <label class="f"><input type="text" id="matLab2" aria-label="Матеріали Stelmakh Lab, рядок 2"></label>
+        <div class="notes lab"><textarea id="matLab" rows="4" aria-label="Матеріали Stelmakh Lab, які необхідно повернути"></textarea></div>
       </div>
     </div>
 
@@ -462,7 +462,7 @@
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
   var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
-    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matLab1","matLab2","shade","notes","fileLink"];
+    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matLab","shade","notes","fileLink"];
   var CHIP_IDS=["callFirst","filesCC","filesGM","filesTG","filesLK","matTray","matAbut","matBow","matAnal","matTrans","matOtherOn"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
     o.chips=CHIP_IDS.filter(function(id){ return $("#"+id).checked; }); o.implants=implants();
@@ -577,7 +577,7 @@
     if(v("shade")) L.push("Колір реставрації: "+v("shade"));
     if(implants().length) L.push("Імплант система: "+implants().join(", "));
     var w=works(); if(w.length){ L.push(""); L.push("Роботи:"); w.forEach(function(x){ L.push("  • "+x.n+(x.note?(" — "+x.note):"")); }); }
-    var m=materials(); var lab=[v("matLab1"),v("matLab2")].filter(Boolean).join("; ");
+    var m=materials(); var lab=v("matLab").replace(/\s*\n+\s*/g,"; ");
     if(m.length) L.push("Повернути клієнту: "+m.join(", "));
     if(lab) L.push("Повернути Stelmakh Lab: "+lab);
     if(v("notes")){ L.push(""); L.push("Важливо для техніка: "+v("notes")); }
@@ -638,8 +638,9 @@
     $$(".blk",root).forEach(function(b){ if(!$(".f",b)) b.remove(); });
     $$(".dt",root).forEach(function(d){ if(!d.children.length) d.remove(); });
     // нотатки
-    var ta=$(".notes textarea",root); if(ta&&!ta.value.trim()){ ta.closest(".notes").previousElementSibling.remove(); ta.closest(".notes").remove(); }
-    else if(ta){ var lines=Math.max(1,ta.value.split("\n").length); ta.style.height=(lines*28)+"px"; }
+    $$(".notes textarea",root).forEach(function(ta){
+      if(!ta.value.trim()){ var h=ta.closest(".notes").previousElementSibling; if(h&&h.tagName==="H2") h.remove(); ta.closest(".notes").remove(); }
+      else { var lines=Math.max(1,ta.value.split("\n").length); ta.style.height=(lines*28)+"px"; } });
     // порожні обгортки
     var sweep=function(){ var n=0; $$(".cols, .grid2, .grid3, #works > div",root).forEach(function(el){
       if(!el.children.length||!$("input,textarea,svg",el)){ el.remove(); n++; } }); return n; };
