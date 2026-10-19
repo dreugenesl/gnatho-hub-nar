@@ -93,6 +93,12 @@
   .cols.top{gap:0 34px;}
   .chips.mats{margin-top:6px; gap:8px;}
   .chips.mats .chip{padding:8px 12px; font-size:13px;}
+  .chip .qty{display:none; position:relative; z-index:1; width:46px; margin-left:4px; font:inherit; font-size:13px; font-weight:700;
+    color:var(--ink); background:#fff; border:0; border-radius:4px; padding:2px 6px; text-align:center; -moz-appearance:textfield;}
+  .chip .qty::-webkit-outer-spin-button,.chip .qty::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .chip .qty::placeholder{color:#A8ACB5; font-weight:400;}
+  .chip:has(input:checked) .qty{display:inline-block;}
+  .chip .qty:focus{outline:2px solid var(--blue);}
   .blk{display:grid; gap:10px; align-content:start;}
   .blk h2{margin-bottom:0;}
   .grid2.tight{gap:10px 16px;}
@@ -114,7 +120,7 @@
   .chip{position:relative; display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border:1px solid #D4D8DF; border-radius:6px;
     background:#fff; cursor:pointer; font-size:13.5px; color:var(--ink); transition:.14s ease; user-select:none; white-space:nowrap;}
   .chip:hover{border-color:#787D87;}
-  .chip input{position:absolute; opacity:0; inset:0; margin:0; cursor:pointer;}
+  .chip input[type=checkbox]{position:absolute; opacity:0; inset:0; margin:0; cursor:pointer;}
   .chip .dot{width:9px; height:9px; border-radius:50%; border:1px solid #D4D8DF; flex:none; transition:.14s ease;}
   .chip:has(input:checked){background:var(--head); border-color:var(--head); color:#fff;}
   .chip:has(input:checked) .dot{background:var(--blue); border-color:var(--blue);}
@@ -265,12 +271,12 @@
       <div>
         <h2>Материіали клієнта, які необхідно повернути</h2>
         <div class="chips mats" id="mats">
-          <label class="chip"><input type="checkbox" id="matTray" data-mat="Відбиткова ложка"><span class="dot"></span>Відбиткова ложка</label>
-          <label class="chip"><input type="checkbox" id="matAbut" data-mat="Абатменти"><span class="dot"></span>Абатменти</label>
-          <label class="chip"><input type="checkbox" id="matBow" data-mat="Суппорт лиц. дуги"><span class="dot"></span>Суппорт лиц. дуги</label>
-          <label class="chip"><input type="checkbox" id="matAnal" data-mat="Аналоги"><span class="dot"></span>Аналоги</label>
-          <label class="chip"><input type="checkbox" id="matTrans" data-mat="Трансфери"><span class="dot"></span>Трансфери</label>
-          <label class="chip"><input type="checkbox" id="matOtherOn" data-mat="Інше"><span class="dot"></span>Інше</label>
+          <label class="chip"><input type="checkbox" id="matTray" data-mat="Відбиткова ложка"><span class="dot"></span>Відбиткова ложка<input type="number" class="qty" id="matTray_q" min="1" max="99" placeholder="к-сть" aria-label="Відбиткова ложка — кількість"></label>
+          <label class="chip"><input type="checkbox" id="matAbut" data-mat="Абатменти"><span class="dot"></span>Абатменти<input type="number" class="qty" id="matAbut_q" min="1" max="99" placeholder="к-сть" aria-label="Абатменти — кількість"></label>
+          <label class="chip"><input type="checkbox" id="matBow" data-mat="Суппорт лиц. дуги"><span class="dot"></span>Суппорт лиц. дуги<input type="number" class="qty" id="matBow_q" min="1" max="99" placeholder="к-сть" aria-label="Суппорт лиц. дуги — кількість"></label>
+          <label class="chip"><input type="checkbox" id="matAnal" data-mat="Аналоги"><span class="dot"></span>Аналоги<input type="number" class="qty" id="matAnal_q" min="1" max="99" placeholder="к-сть" aria-label="Аналоги — кількість"></label>
+          <label class="chip"><input type="checkbox" id="matTrans" data-mat="Трансфери"><span class="dot"></span>Трансфери<input type="number" class="qty" id="matTrans_q" min="1" max="99" placeholder="к-сть" aria-label="Трансфери — кількість"></label>
+          <label class="chip"><input type="checkbox" id="matOtherOn" data-mat="Інше"><span class="dot"></span>Інше<input type="number" class="qty" id="matOtherOn_q" min="1" max="99" placeholder="к-сть" aria-label="Інше — кількість"></label>
           <input type="text" id="matOther" class="filelink" placeholder="що саме" aria-label="Інше — що саме">
         </div>
       </div>
@@ -440,7 +446,7 @@
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
   var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
-    "matOther","matLab1","matLab2","shade","implant","stump","notes","fileLink"];
+    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matOtherOn_q","matLab1","matLab2","shade","implant","stump","notes","fileLink"];
   var CHIP_IDS=["callFirst","filesCC","filesGM","filesTG","filesLK","matTray","matAbut","matBow","matAnal","matTrans","matOtherOn"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
     o.chips=CHIP_IDS.filter(function(id){ return $("#"+id).checked; });
@@ -507,10 +513,11 @@
   }
   function materials(){
     return $$("#mats input[type=checkbox]").filter(function(c){ return c.checked; })
-      .map(function(c){ return c.id==="matOtherOn"?("Інше"+(v("matOther")?(": "+v("matOther")):"")):c.dataset.mat; });
+      .map(function(c){ var q=v(c.id+"_q"); return (c.id==="matOtherOn"?("Інше"+(v("matOther")?(": "+v("matOther")):"")):c.dataset.mat)+(q?(" × "+q):""); });
   }
   $("#matOtherOn").addEventListener("change",function(){ $("#matOther").disabled=!this.checked; if(!this.checked) $("#matOther").value=""; });
   $("#matOther").disabled=true;
+  $$("#mats input[type=checkbox]").forEach(function(c){ c.addEventListener("change",function(){ if(!c.checked) setv(c.id+"_q",""); }); });
   function validate(){
     var miss=[];
     if(!v("clinic")) miss.push("Клініка");
@@ -576,6 +583,7 @@
     $$(".body .f",root).forEach(function(f){ if(!filled(f)) f.remove(); });
     // чипи: лишаються тільки увімкнені
     $$(".chip",root).forEach(function(c){ if(!$("input",c).checked) c.remove(); });
+    $$(".qty",root).forEach(function(q){ if(!q.value) q.remove(); });
     $$(".filelink",root).forEach(function(fl){ if(!fl.value.trim()||fl.disabled) fl.remove(); });
     $$(".chips",root).forEach(function(ch){ if(!ch.children.length){ if(ch.previousElementSibling&&ch.previousElementSibling.tagName==="H2") ch.previousElementSibling.remove(); ch.remove(); } });
     // роботи
