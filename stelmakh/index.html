@@ -34,6 +34,35 @@
   .sheet{width:860px; transform-origin:0 0;}
   @media (max-width:600px){ .page{padding:0 0 70px;} .page>form>.actions,.page>form>.toast,.page>form>.foot{margin-left:12px; margin-right:12px;} }
 
+  /* ── вкладки над аркушем ── */
+  .tabs{display:flex; gap:26px; padding:0 4px; border-bottom:1px solid #D4D8DF; margin-bottom:16px;}
+  .tab{background:transparent; border:0; border-radius:0; padding:14px 2px; font:inherit; font-size:14px; color:#787D87;
+    cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;}
+  .tab:hover{color:var(--ink);}
+  .tab.on{color:var(--ink); border-bottom-color:var(--blue); font-weight:700;}
+  .lock-note{margin:0 4px 16px; font-size:13.5px; color:var(--err); font-weight:700;}
+  .lock-note a{color:var(--err); text-decoration:underline; cursor:pointer;}
+  .banner{margin:0 0 16px; padding:10px 14px; border:1px solid #D4D8DF; border-left:3px solid var(--blue); border-radius:6px;
+    font-size:13.5px; color:#555; background:#fff; display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+  .banner[hidden]{display:none;}
+  .banner b{color:var(--ink);}
+  .banner button{background:transparent; border:0; color:var(--blue-ink); font-size:13px; cursor:pointer; text-decoration:underline; padding:0;}
+  .view[hidden]{display:none;}
+  .sheet-wrap.locked{opacity:.45; pointer-events:none; filter:saturate(.6);}
+  .panel{background:#fff; border-radius:10px; padding:26px 28px; box-shadow:0 2px 6px rgba(23,24,28,.06),0 24px 60px -30px rgba(23,24,28,.35);}
+  .panel h2{margin-top:0; font-size:17px;}
+  .panel .note{font-size:13px; color:#787D87; margin:0 0 18px; line-height:1.5;}
+  .panel .f span{min-width:72px;}
+  .panel .state{margin-top:12px; font-size:13px; color:#666; line-height:1.5;}
+  .hist-item{display:flex; gap:14px; align-items:center; padding:12px 2px; border-bottom:1px solid #E4E6EB; flex-wrap:wrap;}
+  .hist-item .meta{flex:1 1 240px; min-width:0; font-size:13.5px; color:#787D87;}
+  .hist-item .meta b{color:var(--ink); font-variant-numeric:tabular-nums;}
+  .hist-item .meta .sub{font-size:12px; color:#A8ACB5; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:520px;}
+  .hist-item .ops{display:flex; gap:8px; flex:none;}
+  .hist-item .ops button{background:transparent; border:1px solid #D4D8DF; color:var(--ink); font-size:12.5px; padding:7px 12px; border-radius:6px;}
+  .hist-item .ops button:hover{border-color:#787D87;}
+  .hist-empty{color:#A8ACB5; font-size:13px; padding:18px 0; line-height:1.5;}
+
   /* ── аркуш ── */
   .sheet{position:relative; background:var(--paper); box-shadow:0 2px 6px rgba(23,24,28,.06),0 24px 60px -30px rgba(23,24,28,.35);
     overflow:hidden; isolation:isolate;}
@@ -145,7 +174,16 @@
 </head>
 <body>
 <div class="page">
-<form id="form" novalidate>
+<nav class="tabs">
+  <button type="button" class="tab on" data-view="order">Наряд</button>
+  <button type="button" class="tab" data-view="register">Реєстрація клініки</button>
+  <button type="button" class="tab" data-view="history">Історія</button>
+</nav>
+<div id="clinicBanner" class="banner" hidden></div>
+<p class="lock-note" id="lockNote" hidden>Спочатку зареєструйтесь —
+  <a id="lockGo">вкладка «Реєстрація клініки»</a>: клініка, лікар, телефон, email.</p>
+
+<form id="form" class="view" data-view="order" novalidate>
 <div class="sheet-wrap" id="sheetWrap"><div class="sheet" id="sheet">
   <svg class="swoosh" viewBox="0 0 595 842" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M 551.65625 -145.417969 C 565.484375 -158.855469 594.554688 -152.066406 594.554688 -135.433594 L 594.246094 488.289062 C 594.246094 505 565.160156 512.507812 551.25 499.476562 L 350.847656 310.816406 C 269.601562 234.355469 269.683594 126.964844 351.011719 48.417969 Z M 551.65625 -145.417969 " transform="matrix(1,0,0,1,0,0)"/><path d="M 0.410156 353.488281 C 0.410156 336.875 29.476562 329.289062 43.304688 342.378906 L 243.703125 530.957031 C 325.054688 607.417969 324.972656 714.808594 243.621094 793.441406 L 42.996094 987.210938 C 29.085938 1000.628906 0 993.839844 0 977.210938 Z M 0.410156 353.488281 " transform="matrix(1,0,0,1,0,0)"/><path d="M 17.476562 13.394531 L 17.476562 62.8125 C 17.476562 62.8125 26.789062 64.5625 33.875 61.972656 C 40.960938 59.378906 53.265625 61.300781 54.570312 61.972656 C 55.875 62.640625 77.691406 63.730469 87.574219 61.984375 C 97.457031 60.234375 113.488281 64.96875 118.152344 61.742188 C 122.8125 58.519531 134.375 60.921875 134.375 60.921875 C 134.375 60.921875 151.15625 62.871094 156.1875 61.984375 C 161.222656 61.09375 166.070312 57.316406 174.273438 60.40625 C 182.480469 63.5 184.714844 60.921875 189.75 60.578125 C 194.785156 60.234375 219.675781 62.898438 226.574219 59.207031 C 233.472656 55.511719 241.863281 60.664062 245.875 61.179688 C 249.882812 61.695312 259.113281 58.003906 260.601562 57.917969 C 262.09375 57.832031 280.878906 63.070312 290.808594 61.136719 C 300.738281 59.207031 316.398438 63.070312 321.015625 61.394531 C 325.628906 59.71875 347.164062 63.714844 354.855469 59.589844 C 362.546875 55.46875 369.539062 59.976562 369.539062 59.976562 C 369.539062 59.976562 381.285156 62.296875 387.300781 59.589844 C 393.3125 56.886719 405.058594 63.328125 411.214844 61.394531 C 417.367188 59.460938 419.464844 59.207031 420.582031 59.207031 C 421.703125 59.207031 433.726562 58.691406 442.957031 61.609375 C 452.1875 64.53125 462.253906 57.230469 462.253906 57.230469 C 462.253906 57.230469 476.378906 63.082031 487.847656 62.109375 C 499.3125 61.136719 493.859375 57.707031 517.773438 61.871094 C 541.683594 66.03125 540.539062 62.683594 540.539062 62.683594 L 540.539062 13.394531 Z M 17.476562 13.394531 " transform="matrix(1,0,0,1,0,0)"/><path d="M 17.476562 163.21875 L 17.476562 115.875 C 17.476562 115.875 19.375 114.203125 27.417969 117.292969 C 35.460938 120.382812 44.757812 117.613281 49.023438 117.550781 C 53.289062 117.484375 59.929688 118.195312 65.105469 119.289062 C 70.28125 120.382812 76.992188 117.613281 82.234375 117.484375 C 87.480469 117.355469 89.996094 122.765625 96.429688 122.25 C 102.863281 121.738281 106.359375 117.550781 116.425781 117.550781 C 126.496094 117.550781 128.3125 121.15625 130.832031 121.414062 C 133.347656 121.671875 140.132812 116.839844 148.449219 117.164062 C 156.769531 117.488281 159.171875 121.457031 165.605469 121.628906 C 172.035156 121.800781 174.273438 117.164062 180.707031 117.164062 C 187.140625 117.164062 192.265625 119.570312 194.132812 120 C 195.996094 120.425781 206.996094 115.578125 214.175781 116.476562 C 221.355469 117.375 225.828125 119.914062 227.789062 120.425781 C 229.746094 120.941406 238.71875 116.777344 247.386719 116.972656 C 256.058594 117.164062 260.140625 119.546875 262.398438 119.675781 C 264.660156 119.804688 268.15625 116.457031 268.15625 116.457031 C 268.15625 116.457031 273.847656 115.554688 279.007812 116.777344 C 284.167969 118 291.230469 120 294.09375 119.871094 C 296.960938 119.742188 308.21875 117.679688 310.597656 117.097656 C 312.972656 116.519531 317.9375 115.746094 321.644531 116.132812 C 325.351562 116.519531 337.167969 116.714844 341.152344 116.261719 C 345.136719 115.8125 350.941406 115.683594 355.835938 116.328125 C 360.730469 116.972656 373.316406 115.273438 379.375 117.335938 C 385.433594 119.398438 392.171875 122.144531 394.210938 119.828125 C 396.25 117.507812 405.339844 114.972656 413.449219 117.679688 C 421.5625 120.382812 426.59375 120.769531 428.132812 119.355469 C 429.671875 117.9375 436.316406 115.617188 448.199219 116.84375 C 460.085938 118.066406 469.207031 117.980469 470.925781 116.777344 C 472.644531 115.574219 478.289062 115.617188 482.578125 117.164062 C 486.867188 118.710938 498.21875 113.941406 514.277344 118.324219 C 530.332031 122.703125 540.539062 113.679688 540.539062 113.679688 L 540.539062 163.21875 Z M 17.476562 163.21875 " transform="matrix(1,0,0,1,0,0)"/></svg>
   <div class="head">
@@ -234,6 +272,30 @@
 <p class="foot">«Надіслати» формує PDF-бланк і відправляє його в чат лабораторії. Дані клініки й лікаря запам'ятовуються на цьому пристрої.
   &nbsp;<a href="../">Наряд на капи — Gnatho Hub</a></p>
 </form>
+
+<section class="panel view" data-view="register" hidden>
+  <h2>Реєстрація клініки</h2>
+  <p class="note">Клініка, що починає співпрацю, реєструється один раз. Далі ці дані автоматично підставляються в кожен наряд на цьому пристрої.</p>
+  <div class="grid2">
+    <label class="f"><span>Клініка *</span><input type="text" id="rClinic" autocomplete="organization"></label>
+    <label class="f"><span>Телефон</span><input type="tel" id="rPhone" autocomplete="tel"></label>
+    <label class="f"><span>Лікар *</span><input type="text" id="rDoctor"></label>
+    <label class="f"><span>Email</span><input type="email" id="rEmail" autocomplete="email"></label>
+  </div>
+  <div class="actions">
+    <button type="button" class="btn-primary" id="rSave">Зберегти реєстрацію</button>
+    <button type="button" class="btn-ghost" id="rLink">Особисте посилання</button>
+    <button type="button" class="btn-ghost" id="rClear">Очистити</button>
+  </div>
+  <div class="toast" id="rToast" role="status"></div>
+  <div class="state" id="rState"></div>
+</section>
+
+<section class="panel view" data-view="history" hidden>
+  <h2>Історія нарядів</h2>
+  <p class="note">Надіслані та завантажені наряди з цього пристрою. Зберігаються лише у вашому браузері.</p>
+  <div id="histList"></div>
+</section>
 </div>
 
 <script>
@@ -244,7 +306,6 @@
   var LAB_EMAIL="admin@stelmakhlab.com";
   var TG_TOKEN="8992069969:AAH0MFm3IKPw6ODAXl0uvTGjsb67bT6gmao";  // @StelmakhLab_naryad_bot
   var TG_CHAT="-5506214550";                                       // група «StelmkhLab НАРЯДИ»
-  var KEY_CLINIC="sl_blank_clinic";
 
   function pad(n){return (n<10?"0":"")+n;}
   function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
@@ -260,14 +321,101 @@
     setv("due",iso(new Date(now.getTime()+7*864e5))); setv("signDate",iso(now));
   }
 
-  // клініка/лікар — запам'ятовуються, щоб не вводити щоразу
-  function loadClinic(){
-    try{ var c=JSON.parse(localStorage.getItem(KEY_CLINIC)||"null"); if(!c) return;
-      ["clinic","phone","doctor","cemail","signDoc"].forEach(function(k){ if(c[k]) setv(k,c[k]); });
-    }catch(e){}
+  // ── Реєстрація клініки (на пристрої) ────────────────────────────────────
+  // localStorage + дубль у cookie на рік (вбудовані браузери месенджерів мають
+  // власне сховище, Safari витирає давно не вживане) + особисте посилання #c=…
+  function ckSet(name,val,days){ try{ var d=new Date(); d.setTime(d.getTime()+days*864e5);
+    document.cookie=name+"="+encodeURIComponent(val)+";expires="+d.toUTCString()+";path=/;SameSite=Lax"; }catch(e){} }
+  function ckGet(name){ try{ var m=document.cookie.match(new RegExp("(?:^|; )"+name+"=([^;]*)")); return m?decodeURIComponent(m[1]):""; }catch(e){ return ""; } }
+  function b64enc(s){ try{ return btoa(unescape(encodeURIComponent(s))).replace(/=+$/,""); }catch(e){ return ""; } }
+  function b64dec(s){ try{ return decodeURIComponent(escape(atob(s))); }catch(e){ return ""; } }
+  var KEY="slClinic";
+  function clinicRec(){ var raw=null; try{ raw=localStorage.getItem(KEY); }catch(e){} if(!raw) raw=ckGet(KEY);
+    try{ return JSON.parse(raw||"null"); }catch(e){ return null; } }
+  function saveClinicRec(o){ var s=JSON.stringify(o); try{ localStorage.setItem(KEY,s); }catch(e){} ckSet(KEY,s,365); }
+  function clearClinicRec(){ try{ localStorage.removeItem(KEY); }catch(e){} ckSet(KEY,"",-1); }
+  (function(){ var m=String(location.hash||"").match(/[#&]c=([^&]+)/); if(!m) return;
+    var o=null; try{ o=JSON.parse(b64dec(m[1])); }catch(e){}
+    if(o&&o.clinic){ saveClinicRec(o); try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} } })();
+  function loadClinic(){ var c=clinicRec(); if(!c) return;
+    if(c.clinic) setv("clinic",c.clinic); if(c.doctor) setv("doctor",c.doctor);
+    if(c.phone) setv("phone",c.phone); if(c.email) setv("cemail",c.email); if(c.doctor&&!v("signDoc")) setv("signDoc",c.doctor); }
+  function saveClinic(){ var c=clinicRec()||{}; if(!c.clinic) return; /* реєстрація живе у вкладці */ }
+
+  function showView(name){
+    $$(".view").forEach(function(el){ el.hidden=(el.dataset.view!==name); });
+    $$(".tab").forEach(function(t){ t.classList.toggle("on",t.dataset.view===name); });
+    if(name==="history") renderHist();
+    if(name==="order") setTimeout(fit,0);
+    window.scrollTo(0,0);
   }
-  function saveClinic(){
-    try{ localStorage.setItem(KEY_CLINIC,JSON.stringify({clinic:v("clinic"),phone:v("phone"),doctor:v("doctor"),cemail:v("cemail"),signDoc:v("signDoc")})); }catch(e){}
+  $$(".tab").forEach(function(t){ t.addEventListener("click",function(){ showView(t.dataset.view); }); });
+  function refreshLock(){ var c=clinicRec(); var on=!(c&&c.clinic&&c.doctor);
+    $("#sheetWrap").classList.toggle("locked",on); $("#lockNote").hidden=!on; $("#send").disabled=on; $("#pdf").disabled=on; }
+  function refreshBanner(){ var c=clinicRec(), b=$("#clinicBanner");
+    if(c&&c.clinic){ b.hidden=false;
+      b.innerHTML='<span>Наряд для клініки: <b>'+esc(c.clinic)+'</b>'+(c.doctor?(' · '+esc(c.doctor)):'')+'</span><button type="button" id="bEdit">Змінити реєстрацію</button>';
+      $("#bEdit").addEventListener("click",function(){ showView("register"); });
+    } else b.hidden=true; }
+  function storageOk(){ try{ localStorage.setItem("__t","1"); localStorage.removeItem("__t"); return true; }catch(e){ return false; } }
+  function refreshState(){ var el=$("#rState"), c=clinicRec();
+    if(!storageOk()){ el.innerHTML='<b style="color:#b23">Браузер не дозволяє зберігати дані</b> — приватне вікно або заборонені дані сайтів. Реєстрація не переживе закриття вкладки.'; return; }
+    if(c&&c.clinic) el.innerHTML='✓ Збережено в цьому браузері: <b>'+esc(c.clinic)+'</b>'+(c.doctor?(' · '+esc(c.doctor)):'')+'<br><span style="color:#888">Відкривайте наряд саме в ньому — в іншому браузері чи в приватному вікні запису немає.</span>';
+    else el.innerHTML='<span style="color:#888">У цьому браузері реєстрації ще немає.</span>'; }
+  function rtoast(m,k){ var t=$("#rToast"); t.textContent=m; t.className="toast show"+(k?(" "+k):""); }
+  $("#rSave").addEventListener("click",function(){
+    var o={clinic:v("rClinic"),doctor:v("rDoctor"),phone:v("rPhone"),email:v("rEmail")};
+    if(!o.clinic||!o.doctor){ rtoast("Вкажіть клініку та лікаря.","err"); return; }
+    saveClinicRec(o); loadClinic(); refreshBanner(); refreshLock(); refreshState();
+    rtoast("Збережено. Дані підставлятимуться в кожен наряд.","ok"); setTimeout(function(){ showView("order"); },800);
+  });
+  $("#rLink").addEventListener("click",function(){
+    var c=clinicRec(); if(!(c&&c.clinic&&c.doctor)){ rtoast("Спершу збережіть реєстрацію.","err"); return; }
+    var url=location.origin+location.pathname+"#c="+b64enc(JSON.stringify(c));
+    var done=function(){ rtoast("Посилання скопійовано. Збережіть його — воно саме заповнює наряд на будь-якому пристрої.","ok"); };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done,function(){ window.prompt("Скопіюйте посилання:",url); });
+    else window.prompt("Скопіюйте посилання:",url);
+  });
+  $("#rClear").addEventListener("click",function(){
+    clearClinicRec(); ["rClinic","rDoctor","rPhone","rEmail"].forEach(function(k){ setv(k,""); });
+    refreshBanner(); refreshLock(); refreshState(); rtoast("Реєстрацію очищено.","");
+  });
+  $("#lockGo").addEventListener("click",function(){ showView("register"); });
+  (function(){ var c=clinicRec(); if(c){ setv("rClinic",c.clinic); setv("rDoctor",c.doctor); setv("rPhone",c.phone); setv("rEmail",c.email); } })();
+
+  // ── Знімок бланка: чернетка та історія ───────────────────────────────────
+  var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","patient","age","tech",
+    "matTray","matAbut","matBow","matAnal","matTrans","matOther","matLab1","matLab2","shade","implant","stump","notes","signDoc","signQC","signDate"];
+  function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
+    o.teeth=teethSel(); o.works=$$(".wk").map(function(w){ var cb=$("input[type=checkbox]",w), tx=$("input[type=text]",w);
+      return (cb.checked||tx.value.trim())?{n:cb.dataset.work,c:cb.checked?1:0,note:tx.value.trim()}:null; }).filter(Boolean); return o; }
+  function applyAll(o){ if(!o) return; FIELD_IDS.forEach(function(id){ if(o[id]!==undefined) setv(id,o[id]); });
+    var ts={}; (o.teeth||[]).forEach(function(t){ ts[t]=1; });
+    teeth.forEach(function(t){ var on=!!ts[t.dataset.n]; t.classList.toggle("on",on); t.setAttribute("aria-checked",on?"true":"false"); }); paintSel();
+    var by={}; (o.works||[]).forEach(function(w){ by[w.n]=w; });
+    $$(".wk").forEach(function(w){ var cb=$("input[type=checkbox]",w), tx=$("input[type=text]",w), r=by[cb.dataset.work];
+      cb.checked=!!(r&&r.c); tx.value=r?(r.note||""):""; w.classList.toggle("on",cb.checked); }); setTimeout(fit,0); }
+  var DRAFT_KEY="slBlankDraft", draftTimer=null;
+  function saveDraft(){ try{ localStorage.setItem(DRAFT_KEY,JSON.stringify(collectAll())); }catch(e){} }
+  function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); }catch(e){} }
+  function schedDraft(){ if(draftTimer) clearTimeout(draftTimer); draftTimer=setTimeout(saveDraft,350); }
+  $("#sheet").addEventListener("input",schedDraft); $("#sheet").addEventListener("change",schedDraft); $("#chart").addEventListener("click",schedDraft);
+
+  var HIST_KEY="slBlankOrders";
+  function loadHist(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); }catch(e){ return []; } }
+  function saveHist(l){ try{ localStorage.setItem(HIST_KEY,JSON.stringify(l)); }catch(e){} }
+  function pushHist(){ var o=collectAll(); o.savedAt=new Date().toISOString(); o.text=brief();
+    var l=loadHist().filter(function(x){ return x.oid!==o.oid; }); l.unshift(o); if(l.length>60) l.length=60; saveHist(l); }
+  function renderHist(){ var box=$("#histList"), l=loadHist();
+    if(!l.length){ box.innerHTML='<div class="hist-empty">Поки порожньо. Наряд потрапляє сюди, коли ви натиснули «Надіслати в лабораторію» або «Завантажити PDF» — і лише якщо він пройшов перевірку: клініка, лікар, пацієнт і хоча б один вид робіт.</div>'; return; }
+    box.innerHTML="";
+    l.forEach(function(o){ var it=document.createElement("div"); it.className="hist-item";
+      var ws=(o.works||[]).map(function(w){ return w.n; }).join(", "), d=(o.savedAt||"").slice(0,10);
+      it.innerHTML='<div class="meta"><b>'+esc(o.oid||"—")+'</b> · '+esc(o.patient||"без пацієнта")+'<div class="sub">'+esc(d)+(ws?(" · "+esc(ws)):"")+'</div></div>'
+        +'<div class="ops"><button type="button" data-op="open">У бланк</button><button type="button" data-op="del" aria-label="Видалити">✕</button></div>';
+      $('[data-op=open]',it).addEventListener("click",function(){ applyAll(o); saveDraft(); showView("order"); toast("Наряд "+(o.oid||"")+" відкрито у бланку — перевірте дати перед надсиланням.","ok"); });
+      $('[data-op=del]',it).addEventListener("click",function(){ saveHist(loadHist().filter(function(x){ return x.oid!==o.oid; })); renderHist(); });
+      box.appendChild(it); });
   }
 
   // зуби
@@ -357,12 +505,12 @@
 
   $("#pdf").addEventListener("click",function(){
     var miss=validate(); if(miss.length){ toast("Заповніть: "+miss.join(", "),"err"); return; }
-    saveClinic(); makePdf();
+    saveClinic(); pushHist(); makePdf();
   });
   $("#form").addEventListener("submit",function(e){
     e.preventDefault();
     var miss=validate(); if(miss.length){ toast("Заповніть: "+miss.join(", "),"err"); return; }
-    saveClinic();
+    saveClinic(); pushHist();
     if(TG_TOKEN&&TG_CHAT){
       var btn=$("#send"); btn.disabled=true; toast("Надсилаємо наряд у лабораторію…","");
       makePdf(function(ok,blob){
@@ -379,6 +527,7 @@
   });
   $("#newOrder").addEventListener("click",function(){
     if(!confirm("Очистити бланк і почати новий наряд?")) return;
+    clearDraft();
     $$("input,textarea",$("#sheet")).forEach(function(e){ if(e.type==="checkbox") e.checked=false; else e.value=""; });
     $$(".wk.on").forEach(function(w){ w.classList.remove("on"); });
     teeth.forEach(function(t){ t.classList.remove("on"); t.setAttribute("aria-checked","false"); });
@@ -397,7 +546,10 @@
   window.addEventListener("load",fit);
   $("#sheet").addEventListener("input",function(){ setTimeout(fit,0); });
 
-  fresh(); loadClinic(); paintSel(); fit();
+  fresh(); loadClinic(); paintSel(); refreshBanner(); refreshLock(); refreshState();
+  (function(){ var d=null; try{ d=JSON.parse(localStorage.getItem(DRAFT_KEY)||"null"); }catch(e){}
+    if(d&&(d.patient||d.notes||(d.teeth&&d.teeth.length)||(d.works&&d.works.length))){ applyAll(d); toast("Відновлено чернетку наряду "+(d.oid||"")+". «Новий наряд» — почати з чистого.",""); } })();
+  fit();
 })();
 </script>
 </body>
