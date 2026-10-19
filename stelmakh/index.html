@@ -94,7 +94,9 @@
   .blk{display:grid; gap:10px; align-content:start;}
   .blk h2{margin-bottom:0;}
   .grid2.tight{gap:10px 16px;}
-  .grid2.tight.wide{grid-template-columns:1.7fr 1fr;}
+  .grid3.pat{grid-template-columns:2fr .8fr 1.2fr;}
+  .dt{display:grid; grid-template-columns:1.55fr 1fr; gap:10px 16px;}
+  .f input[type=time]{font-weight:500;}
   .stack{display:grid; gap:10px;}
   .sp{height:14px;}
 
@@ -214,22 +216,25 @@
         <label class="f"><span>E-mail</span><input type="email" id="demail"></label>
       </div>
     </div>
-    <div class="cols top">
-      <div class="blk">
-        <h2>Пацієнт</h2>
+    <div class="blk">
+      <h2>Пацієнт</h2>
+      <div class="grid3 pat">
         <label class="f"><span>ПІБ пацієнта</span><input type="text" id="patient"></label>
-        <div class="grid2 tight">
-          <label class="f"><span>Вік</span><input type="number" id="age" min="0" max="120"></label>
-          <label class="f"><span>Технік</span><input type="text" id="tech"></label>
-        </div>
+        <label class="f"><span>Вік</span><input type="number" id="age" min="0" max="120"></label>
+        <label class="f"><span>Технік</span><input type="text" id="tech"></label>
       </div>
-      <div class="blk">
-        <h2>Терміни</h2>
-        <div class="grid2 tight wide">
+    </div>
+    <div class="blk">
+      <h2>Терміни</h2>
+      <div class="cols top">
+        <div class="dt">
           <label class="f"><span>Дата замовлення</span><input type="date" id="odate"></label>
-          <label class="f"><span>Час</span><input type="text" id="otime"></label>
+          <label class="f"><span>Час</span><input type="time" id="otime"></label>
         </div>
-        <label class="f"><span>Дата доставки</span><input type="date" id="due"></label>
+        <div class="dt">
+          <label class="f"><span>Дата доставки</span><input type="date" id="due"></label>
+          <label class="f"><span>Час</span><input type="time" id="dtime"></label>
+        </div>
       </div>
     </div>
 
@@ -406,7 +411,7 @@
   (function(){ var c=clinicRec(); if(c){ setv("rClinic",c.clinic); setv("rDoctor",c.doctor); setv("rPhone",c.phone); setv("rEmail",c.email); setv("rDPhone",c.dphone); setv("rDEmail",c.demail); } })();
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
-  var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","patient","age","tech",
+  var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
     "matTray","matAbut","matBow","matAnal","matTrans","matOther","matLab1","matLab2","shade","implant","stump","notes","signDoc","signQC","signDate"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
     o.teeth=teethSel(); o.works=$$(".wk").map(function(w){ var cb=$("input[type=checkbox]",w), tx=$("input[type=text]",w);
@@ -480,7 +485,8 @@
       "Клініка: "+(v("clinic")||"—")+(v("phone")?(" · "+v("phone")):""),
       "Лікар: "+(v("doctor")||"—")+(v("dphone")?(" · "+v("dphone")):""),
       "Пацієнт: "+(v("patient")||"—")+(v("age")?(", "+v("age")+" р."):""),
-      "Дата доставки: "+(v("due")||"—")];
+      "Замовлено: "+(v("odate")||"—")+(v("otime")?(" "+v("otime")):""),
+      "Дата доставки: "+(v("due")||"—")+(v("dtime")?(" "+v("dtime")):"")];
     var ts=teethSel(); if(ts.length) L.push("Зуби: "+ts.join(", "));
     if(v("shade")) L.push("Колір реставрації: "+v("shade"));
     if(v("implant")) L.push("Імплант система: "+v("implant"));
@@ -503,7 +509,8 @@
     var clone=sheet.cloneNode(true); clone.classList.add("pdf"); clone.id="";
     // значення полів у клон (cloneNode не копіює value)
     var src=$$("input,textarea",sheet), dst=$$("input,textarea",clone);
-    src.forEach(function(e,i){ dst[i].value=e.value; if(e.type==="checkbox") dst[i].checked=e.checked; if(e.type==="date"&&e.value){ var p=e.value.split("-"); dst[i].type="text"; dst[i].value=p[2]+"."+p[1]+"."+p[0]; } });
+    src.forEach(function(e,i){ dst[i].value=e.value; if(e.type==="checkbox") dst[i].checked=e.checked; if(e.type==="date"&&e.value){ var p=e.value.split("-"); dst[i].type="text"; dst[i].value=p[2]+"."+p[1]+"."+p[0]; }
+      if(e.type==="time"){ dst[i].type="text"; dst[i].value=e.value; } });
     host.appendChild(clone); document.body.appendChild(host);
     toast("Готуємо PDF…","");
     window.html2canvas(clone,{scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false}).then(function(canvas){
