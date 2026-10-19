@@ -28,7 +28,11 @@
   body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:14px; line-height:1.4;
     -webkit-font-smoothing:antialiased;}
   .page{max-width:900px; margin:0 auto; padding:24px 12px 80px;}
-  @media (max-width:600px){ .page{padding:0 0 70px;} }
+  /* Аркуш має фіксовану розкладку оригіналу (860px) і лише масштабується під
+     ширину екрана — як документ, а не як сайт. Висота обгортки виставляється JS. */
+  .sheet-wrap{position:relative; width:100%; overflow:visible;}
+  .sheet{width:860px; transform-origin:0 0;}
+  @media (max-width:600px){ .page{padding:0 0 70px;} .page>form>.actions,.page>form>.toast,.page>form>.foot{margin-left:12px; margin-right:12px;} }
 
   /* ── аркуш ── */
   .sheet{position:relative; background:var(--paper); box-shadow:0 2px 6px rgba(23,24,28,.06),0 24px 60px -30px rgba(23,24,28,.35);
@@ -43,15 +47,8 @@
   .head img{height:60px; width:auto; justify-self:center; display:block;}
   .head .contact{justify-self:end; text-align:right; font-size:12.5px; line-height:1.55;}
   .head .contact a{color:#fff; text-decoration:none;}
-  @media (max-width:640px){
-    .head{grid-template-columns:1fr 1fr; padding:20px 18px;}
-    .head img{grid-column:1 / -1; justify-self:start; height:50px;}
-    .head .contact{font-size:11.5px;}
-  }
-  @media (max-width:420px){ .head{grid-template-columns:1fr;} .head .contact{justify-self:start; text-align:left;} }
 
   .body{padding:22px 36px 30px;}
-  @media (max-width:640px){ .body{padding:18px 18px 26px;} }
 
   /* поле з підкресленням — як на папері */
   .f{display:flex; align-items:baseline; gap:8px; min-width:0;}
@@ -64,20 +61,17 @@
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px 28px;}
   .grid3{display:grid; grid-template-columns:1.6fr 1fr 1.4fr; gap:10px 22px;}
   .stack{display:grid; gap:10px;}
-  @media (max-width:640px){ .grid2,.grid3{grid-template-columns:1fr;} }
   .sp{height:14px;}
 
   h2{font-size:15px; font-weight:500; color:var(--blue); margin:22px 0 8px; line-height:1.3;}
   h2.first{margin-top:0;}
   .cols{display:grid; grid-template-columns:1fr 1fr; gap:0 34px;}
-  @media (max-width:640px){ .cols{grid-template-columns:1fr;} }
   .mats{display:grid; grid-template-columns:1fr 1fr; gap:10px 22px;}
   .lines .f{margin-top:8px;}
 
   /* зубна формула — векторна з бланка */
   .chart{margin:22px -36px 0; background:var(--band); padding:14px 24px 10px; position:relative;}
-  @media (max-width:640px){ .chart{margin:20px -18px 0; padding:10px 8px 6px; overflow-x:auto;} }
-  .chart svg{display:block; width:100%; height:auto; min-width:520px;}
+  .chart svg{display:block; width:100%; height:auto;}
   .chart .wave{fill:#fff;}
   .tooth{cursor:pointer;}
   .tooth .o{fill:#fff; stroke:#9C9E9C; stroke-width:1; transition:fill .12s ease, stroke .12s ease;}
@@ -111,7 +105,6 @@
   .sign .f{flex-direction:column; align-items:stretch; gap:6px;}
   .sign .f input{text-align:center;}
   .sign .f span{font-size:13px; color:var(--ink);}
-  @media (max-width:640px){ .sign{grid-template-columns:1fr;} }
 
   /* кнопки — поза аркушем */
   .actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; align-items:center;}
@@ -127,7 +120,7 @@
   .foot a{color:#8A8F99;}
 
   /* рендер у PDF: фіксована ширина А4, без інтерактивного декору */
-  .sheet.pdf{width:860px; box-shadow:none;}
+  .sheet.pdf{width:860px; box-shadow:none; transform:none !important;}
   .sheet.pdf .chart-hint, .sheet.pdf .f input::placeholder{display:none; color:transparent;}
   .sheet.pdf .f input, .sheet.pdf .wk input, .sheet.pdf .head .no input{outline:none;}
   @media print{
@@ -141,7 +134,7 @@
 <body>
 <div class="page">
 <form id="form" novalidate>
-<div class="sheet" id="sheet">
+<div class="sheet-wrap" id="sheetWrap"><div class="sheet" id="sheet">
   <svg class="swoosh" viewBox="0 0 595 842" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M 551.65625 -145.417969 C 565.484375 -158.855469 594.554688 -152.066406 594.554688 -135.433594 L 594.246094 488.289062 C 594.246094 505 565.160156 512.507812 551.25 499.476562 L 350.847656 310.816406 C 269.601562 234.355469 269.683594 126.964844 351.011719 48.417969 Z M 551.65625 -145.417969 " transform="matrix(1,0,0,1,0,0)"/><path d="M 0.410156 353.488281 C 0.410156 336.875 29.476562 329.289062 43.304688 342.378906 L 243.703125 530.957031 C 325.054688 607.417969 324.972656 714.808594 243.621094 793.441406 L 42.996094 987.210938 C 29.085938 1000.628906 0 993.839844 0 977.210938 Z M 0.410156 353.488281 " transform="matrix(1,0,0,1,0,0)"/><path d="M 17.476562 13.394531 L 17.476562 62.8125 C 17.476562 62.8125 26.789062 64.5625 33.875 61.972656 C 40.960938 59.378906 53.265625 61.300781 54.570312 61.972656 C 55.875 62.640625 77.691406 63.730469 87.574219 61.984375 C 97.457031 60.234375 113.488281 64.96875 118.152344 61.742188 C 122.8125 58.519531 134.375 60.921875 134.375 60.921875 C 134.375 60.921875 151.15625 62.871094 156.1875 61.984375 C 161.222656 61.09375 166.070312 57.316406 174.273438 60.40625 C 182.480469 63.5 184.714844 60.921875 189.75 60.578125 C 194.785156 60.234375 219.675781 62.898438 226.574219 59.207031 C 233.472656 55.511719 241.863281 60.664062 245.875 61.179688 C 249.882812 61.695312 259.113281 58.003906 260.601562 57.917969 C 262.09375 57.832031 280.878906 63.070312 290.808594 61.136719 C 300.738281 59.207031 316.398438 63.070312 321.015625 61.394531 C 325.628906 59.71875 347.164062 63.714844 354.855469 59.589844 C 362.546875 55.46875 369.539062 59.976562 369.539062 59.976562 C 369.539062 59.976562 381.285156 62.296875 387.300781 59.589844 C 393.3125 56.886719 405.058594 63.328125 411.214844 61.394531 C 417.367188 59.460938 419.464844 59.207031 420.582031 59.207031 C 421.703125 59.207031 433.726562 58.691406 442.957031 61.609375 C 452.1875 64.53125 462.253906 57.230469 462.253906 57.230469 C 462.253906 57.230469 476.378906 63.082031 487.847656 62.109375 C 499.3125 61.136719 493.859375 57.707031 517.773438 61.871094 C 541.683594 66.03125 540.539062 62.683594 540.539062 62.683594 L 540.539062 13.394531 Z M 17.476562 13.394531 " transform="matrix(1,0,0,1,0,0)"/><path d="M 17.476562 163.21875 L 17.476562 115.875 C 17.476562 115.875 19.375 114.203125 27.417969 117.292969 C 35.460938 120.382812 44.757812 117.613281 49.023438 117.550781 C 53.289062 117.484375 59.929688 118.195312 65.105469 119.289062 C 70.28125 120.382812 76.992188 117.613281 82.234375 117.484375 C 87.480469 117.355469 89.996094 122.765625 96.429688 122.25 C 102.863281 121.738281 106.359375 117.550781 116.425781 117.550781 C 126.496094 117.550781 128.3125 121.15625 130.832031 121.414062 C 133.347656 121.671875 140.132812 116.839844 148.449219 117.164062 C 156.769531 117.488281 159.171875 121.457031 165.605469 121.628906 C 172.035156 121.800781 174.273438 117.164062 180.707031 117.164062 C 187.140625 117.164062 192.265625 119.570312 194.132812 120 C 195.996094 120.425781 206.996094 115.578125 214.175781 116.476562 C 221.355469 117.375 225.828125 119.914062 227.789062 120.425781 C 229.746094 120.941406 238.71875 116.777344 247.386719 116.972656 C 256.058594 117.164062 260.140625 119.546875 262.398438 119.675781 C 264.660156 119.804688 268.15625 116.457031 268.15625 116.457031 C 268.15625 116.457031 273.847656 115.554688 279.007812 116.777344 C 284.167969 118 291.230469 120 294.09375 119.871094 C 296.960938 119.742188 308.21875 117.679688 310.597656 117.097656 C 312.972656 116.519531 317.9375 115.746094 321.644531 116.132812 C 325.351562 116.519531 337.167969 116.714844 341.152344 116.261719 C 345.136719 115.8125 350.941406 115.683594 355.835938 116.328125 C 360.730469 116.972656 373.316406 115.273438 379.375 117.335938 C 385.433594 119.398438 392.171875 122.144531 394.210938 119.828125 C 396.25 117.507812 405.339844 114.972656 413.449219 117.679688 C 421.5625 120.382812 426.59375 120.769531 428.132812 119.355469 C 429.671875 117.9375 436.316406 115.617188 448.199219 116.84375 C 460.085938 118.066406 469.207031 117.980469 470.925781 116.777344 C 472.644531 115.574219 478.289062 115.617188 482.578125 117.164062 C 486.867188 118.710938 498.21875 113.941406 514.277344 118.324219 C 530.332031 122.703125 540.539062 113.679688 540.539062 113.679688 L 540.539062 163.21875 Z M 17.476562 163.21875 " transform="matrix(1,0,0,1,0,0)"/></svg>
   <div class="head">
     <div class="no"><label for="oid">Замовлення-наряд №</label><input type="text" id="oid" spellcheck="false"></div>
@@ -218,7 +211,7 @@
       <label class="f"><input type="date" id="signDate"><span>Дата</span></label>
     </div>
   </div>
-</div>
+</div></div>
 
 <div class="actions">
   <button type="submit" class="btn-primary" id="send">Надіслати в лабораторію</button>
@@ -376,7 +369,19 @@
     paintSel(); fresh(); loadClinic(); $("#toast").className="toast"; window.scrollTo({top:0,behavior:"smooth"});
   });
 
-  fresh(); loadClinic(); paintSel();
+  // масштаб аркуша під ширину вікна
+  function fit(){
+    var wrap=$("#sheetWrap"), sheet=$("#sheet");
+    var k=Math.min(1, wrap.clientWidth/860);
+    sheet.style.transform="scale("+k+")";
+    wrap.style.height=(sheet.offsetHeight*k)+"px";
+  }
+  window.addEventListener("resize",fit);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fit);
+  window.addEventListener("load",fit);
+  $("#sheet").addEventListener("input",function(){ setTimeout(fit,0); });
+
+  fresh(); loadClinic(); paintSel(); fit();
 })();
 </script>
 </body>
