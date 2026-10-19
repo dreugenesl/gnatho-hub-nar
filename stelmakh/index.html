@@ -91,6 +91,8 @@
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px 28px;}
   .grid3{display:grid; grid-template-columns:1.6fr 1fr 1.4fr; gap:10px 22px;}
   .cols.top{gap:0 34px;}
+  .chips.mats{margin-top:6px; gap:8px;}
+  .chips.mats .chip{padding:8px 12px; font-size:13px;}
   .blk{display:grid; gap:10px; align-content:start;}
   .blk h2{margin-bottom:0;}
   .grid2.tight{gap:10px 16px;}
@@ -262,13 +264,14 @@
     <div class="cols">
       <div>
         <h2>Материіали клієнта, які необхідно повернути</h2>
-        <div class="mats">
-          <label class="f"><span>Відбиткова ложка</span><input type="text" id="matTray"></label>
-          <label class="f"><span>Абатменти</span><input type="text" id="matAbut"></label>
-          <label class="f"><span>Суппорт лиц. дуги</span><input type="text" id="matBow"></label>
-          <label class="f"><span>Аналоги</span><input type="text" id="matAnal"></label>
-          <label class="f"><span>Трансфери</span><input type="text" id="matTrans"></label>
-          <label class="f"><span>Інше</span><input type="text" id="matOther"></label>
+        <div class="chips mats" id="mats">
+          <label class="chip"><input type="checkbox" id="matTray" data-mat="Відбиткова ложка"><span class="dot"></span>Відбиткова ложка</label>
+          <label class="chip"><input type="checkbox" id="matAbut" data-mat="Абатменти"><span class="dot"></span>Абатменти</label>
+          <label class="chip"><input type="checkbox" id="matBow" data-mat="Суппорт лиц. дуги"><span class="dot"></span>Суппорт лиц. дуги</label>
+          <label class="chip"><input type="checkbox" id="matAnal" data-mat="Аналоги"><span class="dot"></span>Аналоги</label>
+          <label class="chip"><input type="checkbox" id="matTrans" data-mat="Трансфери"><span class="dot"></span>Трансфери</label>
+          <label class="chip"><input type="checkbox" id="matOtherOn" data-mat="Інше"><span class="dot"></span>Інше</label>
+          <input type="text" id="matOther" class="filelink" placeholder="що саме" aria-label="Інше — що саме">
         </div>
       </div>
       <div class="lines">
@@ -437,14 +440,14 @@
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
   var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
-    "matTray","matAbut","matBow","matAnal","matTrans","matOther","matLab1","matLab2","shade","implant","stump","notes","fileLink"];
-  var CHIP_IDS=["callFirst","filesCC","filesGM","filesTG","filesLK"];
+    "matOther","matLab1","matLab2","shade","implant","stump","notes","fileLink"];
+  var CHIP_IDS=["callFirst","filesCC","filesGM","filesTG","filesLK","matTray","matAbut","matBow","matAnal","matTrans","matOtherOn"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
     o.chips=CHIP_IDS.filter(function(id){ return $("#"+id).checked; });
     o.teeth=teethSel(); o.works=$$(".wk").map(function(w){ var cb=$("input[type=checkbox]",w), tx=$("input[type=text]",w);
       return (cb.checked||tx.value.trim())?{n:cb.dataset.work,c:cb.checked?1:0,note:tx.value.trim()}:null; }).filter(Boolean); return o; }
   function applyAll(o){ if(!o) return; FIELD_IDS.forEach(function(id){ if(o[id]!==undefined) setv(id,o[id]); });
-    CHIP_IDS.forEach(function(id){ $("#"+id).checked=(o.chips||[]).indexOf(id)>=0; }); $("#fileLink").disabled=!$("#filesLK").checked;
+    CHIP_IDS.forEach(function(id){ $("#"+id).checked=(o.chips||[]).indexOf(id)>=0; }); $("#fileLink").disabled=!$("#filesLK").checked; $("#matOther").disabled=!$("#matOtherOn").checked;
     var ts={}; (o.teeth||[]).forEach(function(t){ ts[t]=1; });
     teeth.forEach(function(t){ var on=!!ts[t.dataset.n]; t.classList.toggle("on",on); t.setAttribute("aria-checked",on?"true":"false"); }); paintSel();
     var by={}; (o.works||[]).forEach(function(w){ by[w.n]=w; });
@@ -503,9 +506,11 @@
       .map(function(w){return {n:$("input[type=checkbox]",w).dataset.work, note:$("input[type=text]",w).value.trim()};});
   }
   function materials(){
-    var m=[["Відбиткова ложка","matTray"],["Абатменти","matAbut"],["Суппорт лиц. дуги","matBow"],["Аналоги","matAnal"],["Трансфери","matTrans"],["Інше","matOther"]];
-    return m.filter(function(x){return v(x[1]);}).map(function(x){return x[0]+": "+v(x[1]);});
+    return $$("#mats input[type=checkbox]").filter(function(c){ return c.checked; })
+      .map(function(c){ return c.id==="matOtherOn"?("Інше"+(v("matOther")?(": "+v("matOther")):"")):c.dataset.mat; });
   }
+  $("#matOtherOn").addEventListener("change",function(){ $("#matOther").disabled=!this.checked; if(!this.checked) $("#matOther").value=""; });
+  $("#matOther").disabled=true;
   function validate(){
     var miss=[];
     if(!v("clinic")) miss.push("Клініка");
@@ -571,14 +576,13 @@
     $$(".body .f",root).forEach(function(f){ if(!filled(f)) f.remove(); });
     // чипи: лишаються тільки увімкнені
     $$(".chip",root).forEach(function(c){ if(!$("input",c).checked) c.remove(); });
-    var fl=$(".filelink",root); if(fl&&(!fl.value.trim()||fl.disabled)) fl.remove();
-    var ch=$(".chips",root); if(ch&&!ch.children.length) ch.remove();
+    $$(".filelink",root).forEach(function(fl){ if(!fl.value.trim()||fl.disabled) fl.remove(); });
+    $$(".chips",root).forEach(function(ch){ if(!ch.children.length){ if(ch.previousElementSibling&&ch.previousElementSibling.tagName==="H2") ch.previousElementSibling.remove(); ch.remove(); } });
     // роботи
     $$(".wk",root).forEach(function(w){ if(!$("input[type=checkbox]",w).checked) w.remove();
       else { var t=$("input[type=text]",w); if(!t.value.trim()) t.remove(); } });
     $$(".wg",root).forEach(function(g){ if(!$(".wk",g)) g.remove(); });
     // матеріали: сітка клієнта / рядки лабораторії
-    $$(".mats",root).forEach(function(m){ if(!m.children.length) m.previousElementSibling.remove(), m.remove(); });
     $$(".lines",root).forEach(function(l){ if(!$(".f",l)) l.remove(); });
     // колір/імплант/культя: заголовок без поля — геть
     $$(".grid3 > div",root).forEach(function(d){ if(!$(".f",d)) d.remove(); });
@@ -630,7 +634,7 @@
     $$("input,textarea",$("#sheet")).forEach(function(e){ if(e.type==="checkbox") e.checked=false; else e.value=""; });
     $$(".wk.on").forEach(function(w){ w.classList.remove("on"); });
     teeth.forEach(function(t){ t.classList.remove("on"); t.setAttribute("aria-checked","false"); });
-    paintSel(); $("#fileLink").disabled=true; fresh(); loadClinic(); $("#toast").className="toast"; window.scrollTo({top:0,behavior:"smooth"});
+    paintSel(); $("#fileLink").disabled=true; $("#matOther").disabled=true; fresh(); loadClinic(); $("#toast").className="toast"; window.scrollTo({top:0,behavior:"smooth"});
   });
 
   // масштаб аркуша під ширину вікна
