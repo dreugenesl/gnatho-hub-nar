@@ -158,6 +158,17 @@
   .wg{margin-top:14px;}
   .wg:first-child{margin-top:0;}
   .wg h3{font-size:13px; font-weight:700; color:var(--ink); margin:0 0 3px; letter-spacing:.01em; text-transform:uppercase;}
+  .params .f{padding:3px 0;}
+  .params select{appearance:none; -webkit-appearance:none; background:transparent url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%238E9095'/></svg>") no-repeat right 4px center; padding-right:18px;}
+  .impl{display:flex; align-items:baseline; gap:8px; padding:3px 0;}
+  .impl select,.impl input{flex:1; min-width:0; font:inherit; font-size:14.5px; font-weight:500; color:var(--ink); background:transparent; border:0; border-bottom:1px solid var(--rule); border-radius:0; padding:2px 4px 3px; height:26px;}
+  .impl select{appearance:none; -webkit-appearance:none; background:transparent url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%238E9095'/></svg>") no-repeat right 4px center; padding-right:18px;}
+  .impl select:focus,.impl input:focus{outline:none; border-bottom:2px solid var(--blue); padding-bottom:2px;}
+  .impl input{display:none;} .impl.other input{display:block;}
+  .impl .rm{flex:none; background:transparent; border:0; color:#A8ACB5; font-size:16px; padding:0 4px; cursor:pointer; line-height:1;}
+  .impl .rm:hover{color:var(--err);}
+  .addrow{margin-top:6px; width:28px; height:28px; padding:0; border-radius:50%; border:1px solid #D4D8DF; background:#fff; color:var(--ink); font-size:18px; line-height:1; cursor:pointer;}
+  .addrow:hover{border-color:var(--ink);}
   /* роботи: назва + лінія для позначки */
   .wk{display:flex; align-items:baseline; gap:8px; padding:3px 0;}
   .wk .pick{display:flex; align-items:center; gap:8px; cursor:pointer; flex:0 1 auto; user-select:none;}
@@ -202,6 +213,7 @@
 
   /* рендер у PDF: фіксована ширина А4, без інтерактивного декору */
   .sheet.pdf{width:860px; box-shadow:none; transform:none !important;}
+  .sheet.pdf select{background-image:none !important; padding-right:4px;}
   .sheet.pdf .chart-hint, .sheet.pdf .f input::placeholder{display:none; color:transparent;}
   .sheet.pdf .f input, .sheet.pdf .wk input, .sheet.pdf .head .no input{outline:none;}
   @media print{
@@ -307,15 +319,18 @@
       <p class="chart-hint">Торкніться зуба, щоб позначити · <b id="teethSel">—</b></p>
     </div>
 
-    <div class="grid3" style="margin-top:22px">
-      <div><h2 class="first">Колір реставрації</h2><label class="f"><input type="text" id="shade" aria-label="Колір реставрації"></label></div>
-      <div><h2 class="first">Імплант система</h2><label class="f"><input type="text" id="implant" aria-label="Імплант система"></label></div>
-      <div><h2 class="first">Колір культі</h2><label class="f"><input type="text" id="stump" aria-label="Колір культі"></label></div>
-    </div>
 
     <div class="cols" style="margin-top:20px" id="works">
       <div><div class="wg"><h3>Кераміка: Літій дисилікат і ZrO2</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w1" data-work="Коронка/ Вінір/ Літій дисилікат"><i class="box"></i><span>Коронка/ Вінір/ Літій дисилікат</span></label><input type="text" id="w1" aria-label="Коронка/ Вінір/ Літій дисилікат — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w2" data-work="Коронка/вінір с пошар. нанесенням кераміки"><i class="box"></i><span>Коронка/вінір с пошар. нанесенням кераміки</span></label><input type="text" id="w2" aria-label="Коронка/вінір с пошар. нанесенням кераміки — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w3" data-work="Вінір на рефракторі"><i class="box"></i><span>Вінір на рефракторі</span></label><input type="text" id="w3" aria-label="Вінір на рефракторі — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w5" data-work="Коронка ZrO2 Multilayer"><i class="box"></i><span>Коронка ZrO2 Multilayer</span></label><input type="text" id="w5" aria-label="Коронка ZrO2 Multilayer — примітка"></div></div><div class="wg"><h3>Робота на імплантатах</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w6" data-work="Коронка з гвинтовою фіксацією"><i class="box"></i><span>Коронка з гвинтовою фіксацією</span></label><input type="text" id="w6" aria-label="Коронка з гвинтовою фіксацією — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w8" data-work="Тимчасова коронка з гвинтовою фіксацією"><i class="box"></i><span>Тимчасова коронка з гвинтовою фіксацією</span></label><input type="text" id="w8" aria-label="Тимчасова коронка з гвинтовою фіксацією — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w7" data-work="Абатмент ZrO2"><i class="box"></i><span>Абатмент ZrO2</span></label><input type="text" id="w7" aria-label="Абатмент ZrO2 — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w9" data-work="Хірургічний шаблон"><i class="box"></i><span>Хірургічний шаблон</span></label><input type="text" id="w9" aria-label="Хірургічний шаблон — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w22" data-work="Хірургічний шаблон для гінгівокорекції"><i class="box"></i><span>Хірургічний шаблон для гінгівокорекції</span></label><input type="text" id="w22" aria-label="Хірургічний шаблон для гінгівокорекції — примітка"></div></div><div class="wg"><h3>Допоміжні роботи</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w15" data-work="Індивідуальна ложка"><i class="box"></i><span>Індивідуальна ложка</span></label><input type="text" id="w15" aria-label="Індивідуальна ложка — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w17" data-work="Індивідуалізація ясна"><i class="box"></i><span>Індивідуалізація ясна</span></label><input type="text" id="w17" aria-label="Індивідуалізація ясна — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w18" data-work="Первинний ковпачок"><i class="box"></i><span>Первинний ковпачок</span></label><input type="text" id="w18" aria-label="Первинний ковпачок — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w19" data-work="POM вкладка"><i class="box"></i><span>POM вкладка</span></label><input type="text" id="w19" aria-label="POM вкладка — примітка"></div></div></div>
-      <div><div class="wg"><h3>Тимчасові конструкції</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w4" data-work="Тимчасова керамічна коронка"><i class="box"></i><span>Тимчасова керамічна коронка</span></label><input type="text" id="w4" aria-label="Тимчасова керамічна коронка — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w13" data-work="Тимчасова коронка з PMMA"><i class="box"></i><span>Тимчасова коронка з PMMA</span></label><input type="text" id="w13" aria-label="Тимчасова коронка з PMMA — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w12" data-work="Тимчасова коронка без попереднього цифрового моделювання"><i class="box"></i><span>Тимчасова коронка без попереднього цифрового моделювання</span></label><input type="text" id="w12" aria-label="Тимчасова коронка без попереднього цифрового моделювання — примітка"></div></div><div class="wg"><h3>Цифрові послуги та 3D друк</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w14" data-work="Цифрове моделювання"><i class="box"></i><span>Цифрове моделювання</span></label><input type="text" id="w14" aria-label="Цифрове моделювання — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w16" data-work="Діагностичні моделі"><i class="box"></i><span>Діагностичні моделі</span></label><input type="text" id="w16" aria-label="Діагностичні моделі — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w20" data-work="3D друк одного квадранту"><i class="box"></i><span>3D друк одного квадранту</span></label><input type="text" id="w20" aria-label="3D друк одного квадранту — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w21" data-work="3D друк моделі щелепи"><i class="box"></i><span>3D друк моделі щелепи</span></label><input type="text" id="w21" aria-label="3D друк моделі щелепи — примітка"></div></div></div>
+      <div><div class="wg"><h3>Тимчасові конструкції</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w4" data-work="Тимчасова керамічна коронка"><i class="box"></i><span>Тимчасова керамічна коронка</span></label><input type="text" id="w4" aria-label="Тимчасова керамічна коронка — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w13" data-work="Тимчасова коронка з PMMA"><i class="box"></i><span>Тимчасова коронка з PMMA</span></label><input type="text" id="w13" aria-label="Тимчасова коронка з PMMA — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w12" data-work="Тимчасова коронка без попереднього цифрового моделювання"><i class="box"></i><span>Тимчасова коронка без попереднього цифрового моделювання</span></label><input type="text" id="w12" aria-label="Тимчасова коронка без попереднього цифрового моделювання — примітка"></div></div><div class="wg"><h3>Цифрові послуги та 3D друк</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w14" data-work="Цифрове моделювання"><i class="box"></i><span>Цифрове моделювання</span></label><input type="text" id="w14" aria-label="Цифрове моделювання — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w16" data-work="Діагностичні моделі"><i class="box"></i><span>Діагностичні моделі</span></label><input type="text" id="w16" aria-label="Діагностичні моделі — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w20" data-work="3D друк одного квадранту"><i class="box"></i><span>3D друк одного квадранту</span></label><input type="text" id="w20" aria-label="3D друк одного квадранту — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w21" data-work="3D друк моделі щелепи"><i class="box"></i><span>3D друк моделі щелепи</span></label><input type="text" id="w21" aria-label="3D друк моделі щелепи — примітка"></div></div><div class="wg params" id="params">
+        <h3>Колір реставрації</h3>
+        <label class="f"><span>VITA</span><select id="shade" aria-label="Колір реставрації" data-opts=""><option value="">—</option><option value="A1">A1</option><option value="A2">A2</option><option value="A3">A3</option><option value="A3.5">A3.5</option><option value="A4">A4</option><option value="B1">B1</option><option value="B2">B2</option><option value="B3">B3</option><option value="B4">B4</option><option value="C1">C1</option><option value="C2">C2</option><option value="C3">C3</option><option value="C4">C4</option><option value="D2">D2</option><option value="D3">D3</option><option value="D4">D4</option><option value="BL1">BL1</option><option value="BL2">BL2</option><option value="BL3">BL3</option><option value="BL4">BL4</option></select></label>
+        <h3 style="margin-top:14px">Колір культі</h3>
+        <label class="f"><span>Відтінок</span><input type="text" id="stump" aria-label="Колір культі"></label>
+        <h3 style="margin-top:14px">Імплант система</h3>
+        <div id="implants"></div>
+        <button type="button" class="addrow" id="implAdd" aria-label="Додати систему">+</button>
+      </div></div>
     </div>
 
     <h2>Важливо &nbsp;для техніка</h2>
@@ -449,14 +464,14 @@
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
   var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
-    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matLab1","matLab2","shade","implant","stump","notes","fileLink"];
+    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matLab1","matLab2","shade","stump","notes","fileLink"];
   var CHIP_IDS=["callFirst","filesCC","filesGM","filesTG","filesLK","matTray","matAbut","matBow","matAnal","matTrans","matOtherOn"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
-    o.chips=CHIP_IDS.filter(function(id){ return $("#"+id).checked; });
+    o.chips=CHIP_IDS.filter(function(id){ return $("#"+id).checked; }); o.implants=implants();
     o.teeth=teethSel(); o.works=$$(".wk").map(function(w){ var cb=$("input[type=checkbox]",w), tx=$("input[type=text]",w);
       return (cb.checked||tx.value.trim())?{n:cb.dataset.work,c:cb.checked?1:0,note:tx.value.trim()}:null; }).filter(Boolean); return o; }
   function applyAll(o){ if(!o) return; FIELD_IDS.forEach(function(id){ if(o[id]!==undefined) setv(id,o[id]); });
-    CHIP_IDS.forEach(function(id){ $("#"+id).checked=(o.chips||[]).indexOf(id)>=0; }); $("#fileLink").disabled=!$("#filesLK").checked; $("#matOther").disabled=!$("#matOtherOn").checked;
+    CHIP_IDS.forEach(function(id){ $("#"+id).checked=(o.chips||[]).indexOf(id)>=0; }); setImplants(o.implants||[]); $("#fileLink").disabled=!$("#filesLK").checked; $("#matOther").disabled=!$("#matOtherOn").checked;
     var ts={}; (o.teeth||[]).forEach(function(t){ ts[t]=1; });
     teeth.forEach(function(t){ var on=!!ts[t.dataset.n]; t.classList.toggle("on",on); t.setAttribute("aria-checked",on?"true":"false"); }); paintSel();
     var by={}; (o.works||[]).forEach(function(w){ by[w.n]=w; });
@@ -494,6 +509,26 @@
     t.addEventListener("click",tog);
     t.addEventListener("keydown",function(e){ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tog(); } });
   });
+
+  // ── Імплант системи: кілька рядків, «+» додає ─────────────────────────────
+  var IMPL=["Straumann", "Nobel Biocare", "Astra Tech", "Ankylos", "Osstem", "Hiossen", "MIS", "Megagen", "Alpha-Bio", "BioHorizons", "Zimmer", "Neodent", "Dentium", "Camlog", "Bicon", "Biotech", "Інша"];
+  function implRow(val,other){
+    var d=document.createElement("div"); d.className="impl";
+    d.innerHTML='<select aria-label="Імплант система"><option value="">—</option>'+IMPL.map(function(x){ return '<option value="'+x+'">'+x+'</option>'; }).join("")+'</select>'
+      +'<input type="text" placeholder="яка саме" aria-label="Інша система">'
+      +'<button type="button" class="rm" aria-label="Прибрати">×</button>';
+    var sel=$("select",d), tx=$("input",d);
+    sel.addEventListener("change",function(){ d.classList.toggle("other",sel.value==="Інша"); if(sel.value!=="Інша") tx.value=""; setTimeout(fit,0); });
+    $(".rm",d).addEventListener("click",function(){ if($$(".impl").length>1) d.remove(); else { sel.value=""; tx.value=""; d.classList.remove("other"); } schedDraft(); setTimeout(fit,0); });
+    if(val){ sel.value=IMPL.indexOf(val)>=0?val:"Інша"; if(sel.value==="Інша"){ d.classList.add("other"); tx.value=other||val; } }
+    $("#implants").appendChild(d); return d;
+  }
+  $("#implAdd").addEventListener("click",function(){ var r=implRow(); $("select",r).focus(); schedDraft(); setTimeout(fit,0); });
+  function implants(){
+    return $$(".impl").map(function(d){ var sv=$("select",d).value, tx=$("input",d).value.trim(); return sv==="Інша"?tx:sv; }).filter(Boolean);
+  }
+  function setImplants(list){ $("#implants").innerHTML=""; (list&&list.length?list:[""]).forEach(function(x){ implRow(x); }); }
+  setImplants([]);
 
   // файлообмінник: посилання активне лише з увімкненим чипом
   $("#filesLK").addEventListener("change",function(){ $("#fileLink").disabled=!this.checked; if(!this.checked) $("#fileLink").value=""; });
@@ -542,7 +577,7 @@
     var fs=chipsText(); if(fs.length) L.push("Файли: "+fs.join(", "));
     var ts=teethSel(); if(ts.length) L.push("Зуби: "+ts.join(", "));
     if(v("shade")) L.push("Колір реставрації: "+v("shade"));
-    if(v("implant")) L.push("Імплант система: "+v("implant"));
+    if(implants().length) L.push("Імплант система: "+implants().join(", "));
     if(v("stump")) L.push("Колір культі: "+v("stump"));
     var w=works(); if(w.length){ L.push(""); L.push("Роботи:"); w.forEach(function(x){ L.push("  • "+x.n+(x.note?(" — "+x.note):"")); }); }
     var m=materials(); var lab=[v("matLab1"),v("matLab2")].filter(Boolean).join("; ");
@@ -561,7 +596,7 @@
     host.style.cssText="position:fixed;left:-10000px;top:0;width:860px;background:#fff;z-index:-1;";
     var clone=sheet.cloneNode(true); clone.classList.add("pdf"); clone.id="";
     // значення полів у клон (cloneNode не копіює value)
-    var src=$$("input,textarea",sheet), dst=$$("input,textarea",clone);
+    var src=$$("input,textarea,select",sheet), dst=$$("input,textarea,select",clone);
     src.forEach(function(e,i){ dst[i].value=e.value; if(e.type==="checkbox") dst[i].checked=e.checked; if(e.type==="date"&&e.value){ var p=e.value.split("-"); dst[i].type="text"; dst[i].value=p[2]+"."+p[1]+"."+p[0]; }
       if(e.type==="time"){ dst[i].type="text"; dst[i].value=e.value; } });
     prune(clone);
@@ -581,7 +616,11 @@
   // У PDF лишається тільки заповнене: порожні поля, непозначені роботи,
   // порожні групи й секції прибираються. Зубна формула — завжди.
   function prune(root){
-    var filled=function(el){ var i=$("input,textarea",el); return !!(i&&String(i.value||"").trim()); };
+    var filled=function(el){ var i=$("input,textarea,select",el); return !!(i&&String(i.value||"").trim()); };
+    $$(".addrow",root).forEach(function(b){ b.remove(); });
+    $$(".impl",root).forEach(function(d){ var sv=$("select",d).value; if(!sv||(sv==="Інша"&&!$("input",d).value.trim())) d.remove(); else { $(".rm",d).remove(); if(sv==="Інша"){ $("select",d).remove(); } else { $("input",d).remove(); } } });
+    $$(".params h3",root).forEach(function(h){ var n=h.nextElementSibling; var ok=n&&((n.classList.contains("f")&&filled(n))||(n.id==="implants"&&n.children.length)); if(!ok) h.remove(); });
+    var ip=$("#implants",root); if(ip&&!ip.children.length) ip.remove();
     // поля з підкресленням (крім шапки)
     $$(".body .f",root).forEach(function(f){ if(!filled(f)) f.remove(); });
     // чипи: лишаються тільки увімкнені
@@ -592,7 +631,8 @@
     // роботи
     $$(".wk",root).forEach(function(w){ if(!$("input[type=checkbox]",w).checked) w.remove();
       else { var t=$("input[type=text]",w); if(!t.value.trim()) t.remove(); } });
-    $$(".wg",root).forEach(function(g){ if(!$(".wk",g)) g.remove(); });
+    $$(".wg",root).forEach(function(g){ if(!$(".wk",g)&&!g.classList.contains("params")) g.remove(); });
+    var pr=$(".params",root); if(pr&&!$(".f,.impl",pr)) pr.remove();
     // матеріали: сітка клієнта / рядки лабораторії
     $$(".lines",root).forEach(function(l){ if(!$(".f",l)) l.remove(); });
     // колір/імплант/культя: заголовок без поля — геть
@@ -645,7 +685,7 @@
     $$("input,textarea",$("#sheet")).forEach(function(e){ if(e.type==="checkbox") e.checked=false; else e.value=""; });
     $$(".wk.on").forEach(function(w){ w.classList.remove("on"); });
     teeth.forEach(function(t){ t.classList.remove("on"); t.setAttribute("aria-checked","false"); });
-    paintSel(); $("#fileLink").disabled=true; $("#matOther").disabled=true; fresh(); loadClinic(); $("#toast").className="toast"; window.scrollTo({top:0,behavior:"smooth"});
+    paintSel(); $("#fileLink").disabled=true; $("#matOther").disabled=true; setImplants([]); fresh(); loadClinic(); $("#toast").className="toast"; window.scrollTo({top:0,behavior:"smooth"});
   });
 
   // масштаб аркуша під ширину вікна
