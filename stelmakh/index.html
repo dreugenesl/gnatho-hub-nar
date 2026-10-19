@@ -325,8 +325,6 @@
       <div><div class="wg"><h3>Тимчасові конструкції</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w4" data-work="Тимчасова керамічна коронка"><i class="box"></i><span>Тимчасова керамічна коронка</span></label><input type="text" id="w4" aria-label="Тимчасова керамічна коронка — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w13" data-work="Тимчасова коронка з PMMA"><i class="box"></i><span>Тимчасова коронка з PMMA</span></label><input type="text" id="w13" aria-label="Тимчасова коронка з PMMA — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w12" data-work="Тимчасова коронка без попереднього цифрового моделювання"><i class="box"></i><span>Тимчасова коронка без попереднього цифрового моделювання</span></label><input type="text" id="w12" aria-label="Тимчасова коронка без попереднього цифрового моделювання — примітка"></div></div><div class="wg"><h3>Цифрові послуги та 3D друк</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w14" data-work="Цифрове моделювання"><i class="box"></i><span>Цифрове моделювання</span></label><input type="text" id="w14" aria-label="Цифрове моделювання — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w16" data-work="Діагностичні моделі"><i class="box"></i><span>Діагностичні моделі</span></label><input type="text" id="w16" aria-label="Діагностичні моделі — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w20" data-work="3D друк одного квадранту"><i class="box"></i><span>3D друк одного квадранту</span></label><input type="text" id="w20" aria-label="3D друк одного квадранту — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w21" data-work="3D друк моделі щелепи"><i class="box"></i><span>3D друк моделі щелепи</span></label><input type="text" id="w21" aria-label="3D друк моделі щелепи — примітка"></div></div><div class="wg params" id="params">
         <h3>Колір реставрації</h3>
         <label class="f"><span>VITA</span><select id="shade" aria-label="Колір реставрації" data-opts=""><option value="">—</option><option value="A1">A1</option><option value="A2">A2</option><option value="A3">A3</option><option value="A3.5">A3.5</option><option value="A4">A4</option><option value="B1">B1</option><option value="B2">B2</option><option value="B3">B3</option><option value="B4">B4</option><option value="C1">C1</option><option value="C2">C2</option><option value="C3">C3</option><option value="C4">C4</option><option value="D2">D2</option><option value="D3">D3</option><option value="D4">D4</option><option value="BL1">BL1</option><option value="BL2">BL2</option><option value="BL3">BL3</option><option value="BL4">BL4</option></select></label>
-        <h3 style="margin-top:14px">Колір культі</h3>
-        <label class="f"><span>Відтінок</span><input type="text" id="stump" aria-label="Колір культі"></label>
         <h3 style="margin-top:14px">Імплант система</h3>
         <div id="implants"></div>
         <button type="button" class="addrow" id="implAdd" aria-label="Додати систему">+</button>
@@ -464,7 +462,7 @@
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
   var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
-    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matLab1","matLab2","shade","stump","notes","fileLink"];
+    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matLab1","matLab2","shade","notes","fileLink"];
   var CHIP_IDS=["callFirst","filesCC","filesGM","filesTG","filesLK","matTray","matAbut","matBow","matAnal","matTrans","matOtherOn"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
     o.chips=CHIP_IDS.filter(function(id){ return $("#"+id).checked; }); o.implants=implants();
@@ -578,7 +576,6 @@
     var ts=teethSel(); if(ts.length) L.push("Зуби: "+ts.join(", "));
     if(v("shade")) L.push("Колір реставрації: "+v("shade"));
     if(implants().length) L.push("Імплант система: "+implants().join(", "));
-    if(v("stump")) L.push("Колір культі: "+v("stump"));
     var w=works(); if(w.length){ L.push(""); L.push("Роботи:"); w.forEach(function(x){ L.push("  • "+x.n+(x.note?(" — "+x.note):"")); }); }
     var m=materials(); var lab=[v("matLab1"),v("matLab2")].filter(Boolean).join("; ");
     if(m.length) L.push("Повернути клієнту: "+m.join(", "));
