@@ -93,7 +93,8 @@
   .cols.top{gap:0 34px;}
   .chips.mats{margin-top:6px; gap:8px; display:grid; grid-template-columns:1fr 1fr; align-items:stretch;}
   .chips.mats .chip{white-space:normal;}
-  .chips.mats .filelink{grid-column:1 / -1;}
+  .chips.mats .filelink{grid-column:1 / -1; display:none;}
+  .chips.mats:has(#matOtherOn:checked) .filelink{display:block;}
   .chips.mats .chip{padding:8px 12px; font-size:13px;}
   .chip .qty{display:none; position:relative; z-index:1; width:46px; margin-left:4px; font:inherit; font-size:13px; font-weight:700;
     color:var(--ink); background:#fff; border:0; border-radius:4px; padding:2px 6px; text-align:center; -moz-appearance:textfield;}
@@ -278,7 +279,7 @@
           <label class="chip"><input type="checkbox" id="matBow" data-mat="Суппорт лиц. дуги"><span class="dot"></span>Суппорт лиц. дуги<input type="number" class="qty" id="matBow_q" min="1" max="99" placeholder="к-сть" aria-label="Суппорт лиц. дуги — кількість"></label>
           <label class="chip"><input type="checkbox" id="matAnal" data-mat="Аналоги"><span class="dot"></span>Аналоги<input type="number" class="qty" id="matAnal_q" min="1" max="99" placeholder="к-сть" aria-label="Аналоги — кількість"></label>
           <label class="chip"><input type="checkbox" id="matTrans" data-mat="Трансфери"><span class="dot"></span>Трансфери<input type="number" class="qty" id="matTrans_q" min="1" max="99" placeholder="к-сть" aria-label="Трансфери — кількість"></label>
-          <label class="chip"><input type="checkbox" id="matOtherOn" data-mat="Інше"><span class="dot"></span>Інше<input type="number" class="qty" id="matOtherOn_q" min="1" max="99" placeholder="к-сть" aria-label="Інше — кількість"></label>
+          <label class="chip"><input type="checkbox" id="matOtherOn" data-mat="Інше"><span class="dot"></span>Інше</label>
           <input type="text" id="matOther" class="filelink" placeholder="що саме" aria-label="Інше — що саме">
         </div>
       </div>
@@ -448,7 +449,7 @@
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
   var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
-    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matOtherOn_q","matLab1","matLab2","shade","implant","stump","notes","fileLink"];
+    "matOther","matTray_q","matAbut_q","matBow_q","matAnal_q","matTrans_q","matLab1","matLab2","shade","implant","stump","notes","fileLink"];
   var CHIP_IDS=["callFirst","filesCC","filesGM","filesTG","filesLK","matTray","matAbut","matBow","matAnal","matTrans","matOtherOn"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
     o.chips=CHIP_IDS.filter(function(id){ return $("#"+id).checked; });
@@ -517,7 +518,7 @@
     return $$("#mats input[type=checkbox]").filter(function(c){ return c.checked; })
       .map(function(c){ var q=v(c.id+"_q"); return (c.id==="matOtherOn"?("Інше"+(v("matOther")?(": "+v("matOther")):"")):c.dataset.mat)+(q?(" × "+q):""); });
   }
-  $("#matOtherOn").addEventListener("change",function(){ $("#matOther").disabled=!this.checked; if(!this.checked) $("#matOther").value=""; });
+  $("#matOtherOn").addEventListener("change",function(){ $("#matOther").disabled=!this.checked; if(!this.checked) $("#matOther").value=""; else setTimeout(function(){ $("#matOther").focus(); fit(); },0); setTimeout(fit,0); });
   $("#matOther").disabled=true;
   $$("#mats input[type=checkbox]").forEach(function(c){ c.addEventListener("change",function(){ if(!c.checked) setv(c.id+"_q",""); }); });
   function validate(){
