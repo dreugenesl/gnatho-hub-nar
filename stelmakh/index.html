@@ -507,6 +507,7 @@
     var src=$$("input,textarea",sheet), dst=$$("input,textarea",clone);
     src.forEach(function(e,i){ dst[i].value=e.value; if(e.type==="checkbox") dst[i].checked=e.checked; if(e.type==="date"&&e.value){ var p=e.value.split("-"); dst[i].type="text"; dst[i].value=p[2]+"."+p[1]+"."+p[0]; }
       if(e.type==="time"){ dst[i].type="text"; dst[i].value=e.value; } });
+    prune(clone);
     host.appendChild(clone); document.body.appendChild(host);
     toast("Готуємо PDF…","");
     window.html2canvas(clone,{scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false}).then(function(canvas){
@@ -519,6 +520,32 @@
       if(noSave){ if(cb)cb(true,pdf.output("blob")); return; }
       pdf.save("naryad-"+v("oid")+".pdf"); toast("PDF збережено: naryad-"+v("oid")+".pdf","ok"); if(cb)cb(true);
     }).catch(function(){ document.body.removeChild(host); toast("Не вдалося зібрати PDF. Спробуйте «Друк» із браузера.","err"); if(cb)cb(false,null); });
+  }
+  // У PDF лишається тільки заповнене: порожні поля, непозначені роботи,
+  // порожні групи й секції прибираються. Зубна формула — завжди.
+  function prune(root){
+    var filled=function(el){ var i=$("input,textarea",el); return !!(i&&String(i.value||"").trim()); };
+    // поля з підкресленням (крім шапки)
+    $$(".body .f",root).forEach(function(f){ if(!filled(f)) f.remove(); });
+    // роботи
+    $$(".wk",root).forEach(function(w){ if(!$("input[type=checkbox]",w).checked) w.remove();
+      else { var t=$("input[type=text]",w); if(!t.value.trim()) t.remove(); } });
+    $$(".wg",root).forEach(function(g){ if(!$(".wk",g)) g.remove(); });
+    // матеріали: сітка клієнта / рядки лабораторії
+    $$(".mats",root).forEach(function(m){ if(!m.children.length) m.previousElementSibling.remove(), m.remove(); });
+    $$(".lines",root).forEach(function(l){ if(!$(".f",l)) l.remove(); });
+    // колір/імплант/культя: заголовок без поля — геть
+    $$(".grid3 > div",root).forEach(function(d){ if(!$(".f",d)) d.remove(); });
+    // блоки Клініка/Лікар/Пацієнт/Терміни
+    $$(".blk",root).forEach(function(b){ if(!$(".f",b)) b.remove(); });
+    $$(".dt",root).forEach(function(d){ if(!d.children.length) d.remove(); });
+    // нотатки
+    var ta=$(".notes textarea",root); if(ta&&!ta.value.trim()){ ta.closest(".notes").previousElementSibling.remove(); ta.closest(".notes").remove(); }
+    else if(ta){ var lines=Math.max(1,ta.value.split("\n").length); ta.style.height=(lines*28)+"px"; }
+    // порожні обгортки
+    var sweep=function(){ var n=0; $$(".cols, .grid2, .grid3, #works > div",root).forEach(function(el){
+      if(!el.children.length||!$("input,textarea,svg",el)){ el.remove(); n++; } }); return n; };
+    while(sweep()){}
   }
   function sendTelegram(blob,done){
     var fd=new FormData();
