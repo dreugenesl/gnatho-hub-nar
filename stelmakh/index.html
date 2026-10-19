@@ -90,13 +90,21 @@
   .wg:first-child{margin-top:0;}
   .wg h3{font-size:13px; font-weight:700; color:var(--ink); margin:0 0 3px; letter-spacing:.01em; text-transform:uppercase;}
   /* роботи: назва + лінія для позначки */
-  .wk{display:flex; align-items:baseline; gap:8px; padding:3px 0; cursor:text;}
+  .wk{display:flex; align-items:baseline; gap:8px; padding:3px 0;}
+  .wk .pick{display:flex; align-items:center; gap:8px; cursor:pointer; flex:0 1 auto; user-select:none;}
+  .wk .pick input{position:absolute; opacity:0; width:0; height:0; margin:0;}
+  .wk .box{width:15px; height:15px; flex:none; border:1.3px solid var(--rule); border-radius:3px; background:#fff; position:relative; transition:.12s ease;}
+  .wk .box::after{content:""; position:absolute; left:4px; top:1px; width:4px; height:8px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); opacity:0;}
+  .wk .pick:hover .box{border-color:var(--ink);}
+  .wk .pick input:checked+.box{background:var(--ink); border-color:var(--ink);}
+  .wk .pick input:checked+.box::after{opacity:1;}
+  .wk .pick input:focus-visible+.box{outline:2px solid var(--blue); outline-offset:1px;}
   .wk span{flex:0 1 auto; font-size:14px; line-height:1.3;}
   .wk input{flex:1 1 60px; min-width:60px; font:inherit; font-size:14px; font-weight:500; color:var(--ink); background:transparent;
     border:0; border-bottom:1px solid var(--rule); border-radius:0; padding:2px 4px 3px; height:24px; text-align:center;}
   .wk input:focus{outline:none; border-bottom:2px solid var(--blue); padding-bottom:2px;}
   .wk.on span{font-weight:700;}
-  .wk.on input{border-bottom-color:var(--blue-ink);}
+  .wk.on input[type=text]{border-bottom-color:var(--blue-ink);}
 
   /* важливо для техніка — лінійований блок */
   .notes{margin-top:6px;}
@@ -202,8 +210,8 @@
     </div>
 
     <div class="cols" style="margin-top:20px" id="works">
-      <div><div class="wg"><h3>Кераміка E.max і ZrO2</h3><label class="wk"><span>Коронка/ Вінір/ e.max CAD</span><input type="text" id="w1" data-work="Коронка/ Вінір/ e.max CAD"></label><label class="wk"><span>Коронка/вінір с пошар. нанесенням кераміки</span><input type="text" id="w2" data-work="Коронка/вінір с пошар. нанесенням кераміки"></label><label class="wk"><span>Вінір на рефракторі</span><input type="text" id="w3" data-work="Вінір на рефракторі"></label><label class="wk"><span>Коронка ZrO2 Multilayer</span><input type="text" id="w5" data-work="Коронка ZrO2 Multilayer"></label></div><div class="wg"><h3>Робота на імплантатах</h3><label class="wk"><span>Коронка з гвинтовою фіксацією</span><input type="text" id="w6" data-work="Коронка з гвинтовою фіксацією"></label><label class="wk"><span>Тимчасова коронка з гвинтовою фіксацією</span><input type="text" id="w8" data-work="Тимчасова коронка з гвинтовою фіксацією"></label><label class="wk"><span>Абатмент ZrO2</span><input type="text" id="w7" data-work="Абатмент ZrO2"></label><label class="wk"><span>Хірургічний шаблон</span><input type="text" id="w9" data-work="Хірургічний шаблон"></label></div><div class="wg"><h3>Допоміжні роботи</h3><label class="wk"><span>Індивідуальна ложка</span><input type="text" id="w15" data-work="Індивідуальна ложка"></label><label class="wk"><span>Індивідуалізація ясна</span><input type="text" id="w17" data-work="Індивідуалізація ясна"></label><label class="wk"><span>Первинний ковпачок</span><input type="text" id="w18" data-work="Первинний ковпачок"></label><label class="wk"><span>POM вкладка</span><input type="text" id="w19" data-work="POM вкладка"></label></div></div>
-      <div><div class="wg"><h3>Тимчасові конструкції</h3><label class="wk"><span>Тимчасова керамічна коронка</span><input type="text" id="w4" data-work="Тимчасова керамічна коронка"></label><label class="wk"><span>Тимчасова коронка з PMMA</span><input type="text" id="w13" data-work="Тимчасова коронка з PMMA"></label><label class="wk"><span>Тимчасова коронка з PMMA + Optiglaze Color</span><input type="text" id="w12" data-work="Тимчасова коронка з PMMA + Optiglaze Color"></label></div><div class="wg"><h3>Цифрові послуги та 3D друк</h3><label class="wk"><span>Цифрове моделювання</span><input type="text" id="w14" data-work="Цифрове моделювання"></label><label class="wk"><span>Діагностичні моделі</span><input type="text" id="w16" data-work="Діагностичні моделі"></label><label class="wk"><span>3D друк одного квадранту</span><input type="text" id="w20" data-work="3D друк одного квадранту"></label><label class="wk"><span>3D друк моделі щелепи</span><input type="text" id="w21" data-work="3D друк моделі щелепи"></label></div><div class="wg"><h3>Капи та депрограматори</h3><label class="wk"><span>Депрограматор</span><input type="text" id="w11" data-work="Депрограматор"></label><label class="wk"><span>Каппа/шина</span><input type="text" id="w10" data-work="Каппа/шина"></label></div></div>
+      <div><div class="wg"><h3>Кераміка E.max і ZrO2</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w1" data-work="Коронка/ Вінір/ e.max CAD"><i class="box"></i><span>Коронка/ Вінір/ e.max CAD</span></label><input type="text" id="w1" aria-label="Коронка/ Вінір/ e.max CAD — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w2" data-work="Коронка/вінір с пошар. нанесенням кераміки"><i class="box"></i><span>Коронка/вінір с пошар. нанесенням кераміки</span></label><input type="text" id="w2" aria-label="Коронка/вінір с пошар. нанесенням кераміки — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w3" data-work="Вінір на рефракторі"><i class="box"></i><span>Вінір на рефракторі</span></label><input type="text" id="w3" aria-label="Вінір на рефракторі — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w5" data-work="Коронка ZrO2 Multilayer"><i class="box"></i><span>Коронка ZrO2 Multilayer</span></label><input type="text" id="w5" aria-label="Коронка ZrO2 Multilayer — примітка"></div></div><div class="wg"><h3>Робота на імплантатах</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w6" data-work="Коронка з гвинтовою фіксацією"><i class="box"></i><span>Коронка з гвинтовою фіксацією</span></label><input type="text" id="w6" aria-label="Коронка з гвинтовою фіксацією — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w8" data-work="Тимчасова коронка з гвинтовою фіксацією"><i class="box"></i><span>Тимчасова коронка з гвинтовою фіксацією</span></label><input type="text" id="w8" aria-label="Тимчасова коронка з гвинтовою фіксацією — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w7" data-work="Абатмент ZrO2"><i class="box"></i><span>Абатмент ZrO2</span></label><input type="text" id="w7" aria-label="Абатмент ZrO2 — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w9" data-work="Хірургічний шаблон"><i class="box"></i><span>Хірургічний шаблон</span></label><input type="text" id="w9" aria-label="Хірургічний шаблон — примітка"></div></div><div class="wg"><h3>Допоміжні роботи</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w15" data-work="Індивідуальна ложка"><i class="box"></i><span>Індивідуальна ложка</span></label><input type="text" id="w15" aria-label="Індивідуальна ложка — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w17" data-work="Індивідуалізація ясна"><i class="box"></i><span>Індивідуалізація ясна</span></label><input type="text" id="w17" aria-label="Індивідуалізація ясна — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w18" data-work="Первинний ковпачок"><i class="box"></i><span>Первинний ковпачок</span></label><input type="text" id="w18" aria-label="Первинний ковпачок — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w19" data-work="POM вкладка"><i class="box"></i><span>POM вкладка</span></label><input type="text" id="w19" aria-label="POM вкладка — примітка"></div></div></div>
+      <div><div class="wg"><h3>Тимчасові конструкції</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w4" data-work="Тимчасова керамічна коронка"><i class="box"></i><span>Тимчасова керамічна коронка</span></label><input type="text" id="w4" aria-label="Тимчасова керамічна коронка — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w13" data-work="Тимчасова коронка з PMMA"><i class="box"></i><span>Тимчасова коронка з PMMA</span></label><input type="text" id="w13" aria-label="Тимчасова коронка з PMMA — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w12" data-work="Тимчасова коронка з PMMA + Optiglaze Color"><i class="box"></i><span>Тимчасова коронка з PMMA + Optiglaze Color</span></label><input type="text" id="w12" aria-label="Тимчасова коронка з PMMA + Optiglaze Color — примітка"></div></div><div class="wg"><h3>Цифрові послуги та 3D друк</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w14" data-work="Цифрове моделювання"><i class="box"></i><span>Цифрове моделювання</span></label><input type="text" id="w14" aria-label="Цифрове моделювання — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w16" data-work="Діагностичні моделі"><i class="box"></i><span>Діагностичні моделі</span></label><input type="text" id="w16" aria-label="Діагностичні моделі — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w20" data-work="3D друк одного квадранту"><i class="box"></i><span>3D друк одного квадранту</span></label><input type="text" id="w20" aria-label="3D друк одного квадранту — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w21" data-work="3D друк моделі щелепи"><i class="box"></i><span>3D друк моделі щелепи</span></label><input type="text" id="w21" aria-label="3D друк моделі щелепи — примітка"></div></div><div class="wg"><h3>Капи та депрограматори</h3><div class="wk"><label class="pick"><input type="checkbox" id="c_w11" data-work="Депрограматор"><i class="box"></i><span>Депрограматор</span></label><input type="text" id="w11" aria-label="Депрограматор — примітка"></div><div class="wk"><label class="pick"><input type="checkbox" id="c_w10" data-work="Каппа/шина"><i class="box"></i><span>Каппа/шина</span></label><input type="text" id="w10" aria-label="Каппа/шина — примітка"></div></div></div>
     </div>
 
     <h2>Важливо &nbsp;для техніка</h2>
@@ -272,12 +280,16 @@
     t.addEventListener("keydown",function(e){ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); tog(); } });
   });
 
-  // роботи: заповнений рядок = обрана робота
-  $$(".wk input").forEach(function(i){
-    i.addEventListener("input",function(){ i.closest(".wk").classList.toggle("on",!!i.value.trim()); });
+  // роботи: галочка = обрана робота; текст поруч — примітка (зуби, кількість).
+  // Введений текст сам ставить галочку.
+  $$(".wk").forEach(function(w){
+    var cb=$("input[type=checkbox]",w), tx=$("input[type=text]",w);
+    cb.addEventListener("change",function(){ w.classList.toggle("on",cb.checked); });
+    tx.addEventListener("input",function(){ if(tx.value.trim()&&!cb.checked){ cb.checked=true; w.classList.add("on"); } });
   });
   function works(){
-    return $$(".wk input").filter(function(i){return i.value.trim();}).map(function(i){return {n:i.dataset.work, note:i.value.trim()};});
+    return $$(".wk").filter(function(w){return $("input[type=checkbox]",w).checked;})
+      .map(function(w){return {n:$("input[type=checkbox]",w).dataset.work, note:$("input[type=text]",w).value.trim()};});
   }
   function materials(){
     var m=[["Відбиткова ложка","matTray"],["Абатменти","matAbut"],["Суппорт лиц. дуги","matBow"],["Аналоги","matAnal"],["Трансфери","matTrans"],["Інше","matOther"]];
@@ -320,7 +332,7 @@
     var clone=sheet.cloneNode(true); clone.classList.add("pdf"); clone.id="";
     // значення полів у клон (cloneNode не копіює value)
     var src=$$("input,textarea",sheet), dst=$$("input,textarea",clone);
-    src.forEach(function(e,i){ dst[i].value=e.value; if(e.type==="date"&&e.value){ var p=e.value.split("-"); dst[i].type="text"; dst[i].value=p[2]+"."+p[1]+"."+p[0]; } });
+    src.forEach(function(e,i){ dst[i].value=e.value; if(e.type==="checkbox") dst[i].checked=e.checked; if(e.type==="date"&&e.value){ var p=e.value.split("-"); dst[i].type="text"; dst[i].value=p[2]+"."+p[1]+"."+p[0]; } });
     host.appendChild(clone); document.body.appendChild(host);
     toast("Готуємо PDF…","");
     window.html2canvas(clone,{scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false}).then(function(canvas){
@@ -367,7 +379,7 @@
   });
   $("#newOrder").addEventListener("click",function(){
     if(!confirm("Очистити бланк і почати новий наряд?")) return;
-    $$("input,textarea",$("#sheet")).forEach(function(e){ e.value=""; });
+    $$("input,textarea",$("#sheet")).forEach(function(e){ if(e.type==="checkbox") e.checked=false; else e.value=""; });
     $$(".wk.on").forEach(function(w){ w.classList.remove("on"); });
     teeth.forEach(function(t){ t.classList.remove("on"); t.setAttribute("aria-checked","false"); });
     paintSel(); fresh(); loadClinic(); $("#toast").className="toast"; window.scrollTo({top:0,behavior:"smooth"});
