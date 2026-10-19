@@ -280,11 +280,6 @@
     <h2>Важливо &nbsp;для техніка</h2>
     <div class="notes"><textarea id="notes" rows="3" aria-label="Важливо для техніка"></textarea></div>
 
-    <div class="sign">
-      <label class="f"><input type="text" id="signDoc" autocomplete="name"><span>Підпис лікаря</span></label>
-      <label class="f"><input type="text" id="signQC"><span>Вихідний контроль</span></label>
-      <label class="f"><input type="date" id="signDate"><span>Дата</span></label>
-    </div>
   </div>
 </div></div>
 
@@ -345,7 +340,7 @@
     var now=new Date();
     setv("oid","SL-"+String(now.getFullYear()).slice(2)+pad(now.getMonth()+1)+pad(now.getDate())+"-"+pad(now.getHours())+pad(now.getMinutes()));
     setv("odate",iso(now)); setv("otime",pad(now.getHours())+":"+pad(now.getMinutes()));
-    setv("due",iso(new Date(now.getTime()+7*864e5))); setv("signDate",iso(now));
+    setv("due",iso(new Date(now.getTime()+7*864e5)));
   }
 
   // ── Реєстрація клініки (на пристрої) ────────────────────────────────────
@@ -367,7 +362,7 @@
   function loadClinic(){ var c=clinicRec(); if(!c) return;
     if(c.clinic) setv("clinic",c.clinic); if(c.doctor) setv("doctor",c.doctor);
     if(c.phone) setv("phone",c.phone); if(c.email) setv("cemail",c.email);
-    if(c.dphone) setv("dphone",c.dphone); if(c.demail) setv("demail",c.demail); if(c.doctor&&!v("signDoc")) setv("signDoc",c.doctor); }
+    if(c.dphone) setv("dphone",c.dphone); if(c.demail) setv("demail",c.demail); }
   function saveClinic(){ var c=clinicRec()||{}; if(!c.clinic) return; /* реєстрація живе у вкладці */ }
 
   function showView(name){
@@ -413,7 +408,7 @@
 
   // ── Знімок бланка: чернетка та історія ───────────────────────────────────
   var FIELD_IDS=["oid","odate","otime","due","clinic","phone","doctor","cemail","dphone","demail","dtime","patient","age","tech",
-    "matTray","matAbut","matBow","matAnal","matTrans","matOther","matLab1","matLab2","shade","implant","stump","notes","signDoc","signQC","signDate"];
+    "matTray","matAbut","matBow","matAnal","matTrans","matOther","matLab1","matLab2","shade","implant","stump","notes"];
   function collectAll(){ var o={}; FIELD_IDS.forEach(function(id){ o[id]=v(id); });
     o.teeth=teethSel(); o.works=$$(".wk").map(function(w){ var cb=$("input[type=checkbox]",w), tx=$("input[type=text]",w);
       return (cb.checked||tx.value.trim())?{n:cb.dataset.work,c:cb.checked?1:0,note:tx.value.trim()}:null; }).filter(Boolean); return o; }
